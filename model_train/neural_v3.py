@@ -116,5 +116,3 @@ def modelo(pers_test):
     test2 = pad_sequences(test2, padding='post', maxlen= maxlen)
 
     print(model_grav.predict(test1),model_ses.predict(test2))
-
-train_neural_basic_preembedding()
