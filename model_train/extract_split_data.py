@@ -165,5 +165,3 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
                 embedding_matrix[idx] = np.array(vector, dtype=np.float32)[:embedding_dim]
 
     return embedding_matrix
-
-
