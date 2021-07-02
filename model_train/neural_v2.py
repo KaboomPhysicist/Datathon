@@ -11,6 +11,42 @@ from keras.preprocessing.sequence import pad_sequences
 import matplotlib.pyplot as plt
 import numpy as np
 
+def create_model(vocab_size, embedding_dim, maxlen):
+    #Declaración del modelo de Gravedad
+    model = Sequential()
+    model.add(layers.Embedding(
+        input_dim= vocab_size,
+        output_dim= embedding_dim,
+        input_length= maxlen
+    ))
+
+    model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(4, activation='softmax'))
+    model.compile(optimizer='adam',
+                    loss='sparse_categorical_crossentropy',
+                    metrics=['accuracy']
+            )
+    return model
+
+def create_model2(vocab_size, embedding_dim, maxlen):
+    #Declaración del modelo de Gravedad
+    model = Sequential()
+    model.add(layers.Embedding(
+        input_dim= vocab_size,
+        output_dim= embedding_dim,
+        input_length= maxlen
+    ))
+
+    model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(3, activation='softmax'))
+    model.compile(optimizer='adam',
+                    loss='sparse_categorical_crossentropy',
+                    metrics=['accuracy']
+            )
+    return model
+
 def train_neural_basic_embedding(graph=False):
 
     maxlen = 250
@@ -22,36 +58,8 @@ def train_neural_basic_embedding(graph=False):
     embedding_dim = 100
     embedding_dim2 = 100
 
-    model = Sequential()
-    model2 = Sequential()
-
-    model.add(layers.Embedding(
-        input_dim= vocab_size,
-        output_dim= embedding_dim,
-        input_length= maxlen
-    ))
-
-    model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(10, activation='relu'))
-    model.add(layers.Dense(4, activation='softmax'))
-
-    model2.add(layers.Embedding(
-        input_dim = vocab_size,
-        output_dim = embedding_dim2,
-        input_length = maxlen
-    ))
-    model2.add(layers.GlobalMaxPooling1D())
-    model2.add(layers.Dense(10, activation='relu'))
-    model2.add(layers.Dense(3, activation='softmax'))
-
-    model.compile(optimizer='adam',
-                    loss='sparse_categorical_crossentropy',
-                    metrics=['accuracy']
-            )
-    model2.compile(optimizer='adam',
-                    loss='sparse_categorical_crossentropy',
-                    metrics=['accuracy']
-                    )
+    model = create_model(vocab_size, embedding_dim, maxlen)
+    model2 = create_model2(vocab_size, embedding_dim2, maxlen)
 
     model.summary()
     model2.summary()

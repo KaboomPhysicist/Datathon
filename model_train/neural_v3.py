@@ -11,6 +11,46 @@ from keras.backend import clear_session
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
+def create_model(vocab_size, embedding_dim, embedding_matrix, maxlen):
+    #Declaración del modelo de Gravedad
+    model = Sequential()
+    model.add(layers.Embedding(
+        input_dim= vocab_size,
+        output_dim= embedding_dim,
+        weights = [embedding_matrix],
+        input_length= maxlen,
+        trainable = True
+    ))
+
+    model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(4, activation='softmax'))
+    model.compile(optimizer='adam',
+                    loss='sparse_categorical_crossentropy',
+                    metrics=['accuracy']
+            )
+    return model
+
+def create_model2(vocab_size, embedding_dim, embedding_matrix, maxlen):
+    #Declaración del modelo de Gravedad
+    model = Sequential()
+    model.add(layers.Embedding(
+        input_dim= vocab_size,
+        output_dim= embedding_dim,
+        weights = [embedding_matrix],
+        input_length= maxlen,
+        trainable = True
+    ))
+
+    model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(3, activation='softmax'))
+    model.compile(optimizer='adam',
+                    loss='sparse_categorical_crossentropy',
+                    metrics=['accuracy']
+            )
+    return model
+
 def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/embeddings-l-model.vec'):
 
     maxlen = 250
@@ -23,40 +63,8 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
     embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
     embedding_matrix2 = create_embedding_matrix(embedding_path, tokenizer2.word_index, embedding_dim)
 
-    model = Sequential()
-    model2 = Sequential()
-
-    model.add(layers.Embedding(
-        input_dim = vocab_size,
-        output_dim = embedding_dim,
-        weights =[embedding_matrix],
-        input_length= maxlen,
-        trainable = True
-    ))
-
-    model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(10, activation='relu'))
-    model.add(layers.Dense(4, activation='softmax'))
-
-    model2.add(layers.Embedding(
-        input_dim = vocab_size,
-        output_dim = embedding_dim,
-        weights =[embedding_matrix2],
-        input_length= maxlen,
-        trainable = True
-    ))
-    model2.add(layers.GlobalMaxPooling1D())
-    model2.add(layers.Dense(10, activation='relu'))
-    model2.add(layers.Dense(3, activation='softmax'))
-
-    model.compile(optimizer='adam',
-                    loss='sparse_categorical_crossentropy',
-                    metrics=['accuracy']
-            )
-    model2.compile(optimizer='adam',
-                    loss='sparse_categorical_crossentropy',
-                    metrics=['accuracy']
-                    )
+    model = create_model(vocab_size, embedding_dim, embedding_matrix, maxlen)
+    model2 = create_model(vocab_size, embedding_dim, embedding_matrix2, maxlen)
 
     model.summary()
     model2.summary()

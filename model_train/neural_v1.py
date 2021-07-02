@@ -11,12 +11,7 @@ from extract_split_data import vectorized_set, plot_history
 
 #Modelos de redes neuronales basados en CountVectorizer con sesgo y gravedad separados
 
-def train_neural_vectorizer(graph=False):
-
-    vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = vectorized_set()
-
-    input_dim = X_grav_train.shape[1]
-
+def create_model(input_dim):
     #Declaración del modelo de Gravedad
     model = Sequential()
     model.add(layers.Dense(10, input_dim = input_dim, activation='relu'))
@@ -26,18 +21,32 @@ def train_neural_vectorizer(graph=False):
     model.compile(loss='sparse_categorical_crossentropy',
                     optimizer='adam',
                     metrics=['accuracy'])
+    return model
 
-    #Declaración del modelo de Sesgo
-    model2 = Sequential()
-    model2.add(layers.Dense(10, input_dim = input_dim, activation='relu'))
-    model2.add(layers.Dense(3, activation='softmax'))
+def create_model2(input_dim):
+    #Declaración del modelo de Gravedad
+    model = Sequential()
+    model.add(layers.Dense(10, input_dim = input_dim, activation='relu'))
+    model.add(layers.Dense(3, activation='softmax'))
 
-    model2.compile(loss='sparse_categorical_crossentropy',
+    #sparse_categorical_crossentropy se usa para las clasificaciones de varias categorías
+    model.compile(loss='sparse_categorical_crossentropy',
                     optimizer='adam',
                     metrics=['accuracy'])
+    return model
 
-    model.summary()
-    model2.summary()
+
+def train_neural_vectorizer(graph=False):
+
+    vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = vectorized_set()
+
+    input_dim = X_grav_train.shape[1]
+
+    #Declaración del modelo de Gravedad
+    model = create_model(input_dim)
+
+    #Declaración del modelo de Sesgo
+    model2 = create_model2(input_dim)
 
     clear_session()
 
