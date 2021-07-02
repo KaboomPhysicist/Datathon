@@ -99,7 +99,8 @@ def modelo(pers_test):
 
     tokenizer, tokenizer2 = data_preset(maxlen)
 
-
-    test = tokenizer.texts_to_sequences(np.array([pers_test]))
-    test = pad_sequences(test, padding='post', maxlen= maxlen)
-    print(model_grav.predict(test),model_ses.predict(test))
+    test1 = tokenizer.texts_to_sequences(np.array([pers_test]))
+    test2 = tokenizer2.texts_to_sequences(np.array([pers_test]))
+    test1 = pad_sequences(test1, padding='post', maxlen= maxlen)
+    test2 = pad_sequences(test2, padding='post', maxlen= maxlen)
+    print(model_grav.predict(test1),model_ses.predict(test2))
