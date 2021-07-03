@@ -1,4 +1,4 @@
-from extract_split_data import plot_history, data_preset
+from extract_split_data import plot_history, data_preset, pad
 
 from keras.models import Sequential
 from keras.models import load_model
@@ -51,7 +51,8 @@ def train_neural_basic_embedding(graph=False):
 
     maxlen = 250
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(maxlen, train=True)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True)
+    X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
 
     vocab_size = len(tokenizer.word_index) + 1
 
@@ -112,3 +113,5 @@ def modelo(pers_test):
     test1 = pad_sequences(test1, padding='post', maxlen= maxlen)
     test2 = pad_sequences(test2, padding='post', maxlen= maxlen)
     print(model_grav.predict(test1),model_ses.predict(test2))
+
+train_neural_basic_embedding(True)
