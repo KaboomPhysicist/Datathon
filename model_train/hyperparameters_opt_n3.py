@@ -66,4 +66,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         print(output_string)
         f.write(output_string)
 
-hyperoptimization(100, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/wiki.es.vec'],embedding_dim = [80,100,150,200]))
+hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/fasttext-sbwc.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [100,150,200]),type = 'grid')
