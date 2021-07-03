@@ -4,19 +4,19 @@ from sklearn.model_selection import GridSearchCV
 
 import neural_v3 as n3
 
-from extract_split_data import create_embedding_matrix, data_preset
+from extract_split_data import create_embedding_matrix, data_preset, pad
 
-def hyperoptimization(epochs, maxlen, embedding_dim,param_grid, type = 'random'):
+#param_grid : tokenizer, embedding_dim, embedding_path, maxlen
+
+def hyperoptimization(epochs, param_grid, type = 'random'):
     output_file = 'model_train/performance/output_neural_v3.txt'
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(maxlen, True)
+    maxlen = 250
 
-    embedding_matrix = create_embedding_matrix('embeddings/embeddings-l-model.vec', tokenizer.word_index, embedding_dim)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(True)
+    X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
 
-    vocab_size = len(tokenizer.word_index) + 1
-
-    #param_grid = dict(vocab_size=[vocab_size], embedding_dim=[100],embedding_matrix=[embedding_matrix], maxlen=[250])
-    param_grid.update(dict(embedding_matrix=[embedding_matrix],vocab_size=[vocab_size]))
+    param_grid.update(dict(tokenizer = [tokenizer],maxlen = [maxlen]))
 
     model = KerasClassifier(build_fn = n3.create_model, epochs = epochs,
                             batch_size = 10, verbose=False)
@@ -66,4 +66,4 @@ def hyperoptimization(epochs, maxlen, embedding_dim,param_grid, type = 'random')
         print(output_string)
         f.write(output_string)
 
-hyperoptimization(100, 250, 200, dict(embedding_dim=[200], maxlen=[250]))
+hyperoptimization(100, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/wiki.es.vec'],embedding_dim = [80,100,150,200]))
