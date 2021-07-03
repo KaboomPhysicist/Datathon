@@ -64,7 +64,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
     embedding_matrix2 = create_embedding_matrix(embedding_path, tokenizer2.word_index, embedding_dim)
 
     model = create_model(vocab_size, embedding_dim, embedding_matrix, maxlen)
-    model2 = create_model(vocab_size, embedding_dim, embedding_matrix2, maxlen)
+    model2 = create_model2(vocab_size, embedding_dim, embedding_matrix2, maxlen)
 
     model.summary()
     model2.summary()
