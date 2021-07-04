@@ -1,5 +1,15 @@
 Modelo: neural_v2
-Best Accuracy : 0.4196
+Best Accuracy : 0.4464
 {'vocab_size': 5000, 'maxlen': 250, 'embedding_dim': 200}
 Test Accuracy : 0.5263
+
+Modelo: neural_v2
+Best Accuracy : 0.4643
+{'vocab_size': 5000, 'maxlen': 250, 'embedding_dim': 100}
+Test Accuracy : 0.4211
+
+Modelo: neural_v2
+Best Accuracy : 0.4375
+{'vocab_size': 5000, 'maxlen': 250, 'embedding_dim': 100}
+Test Accuracy : 0.4211
 

@@ -2,5 +2,10 @@
 /.vscode
 /__pycache__
 *.pyc
+<<<<<<< HEAD
 setup.sh
 libs.sh
+=======
+setup.sh
+libs.sh
+>>>>>>> master
