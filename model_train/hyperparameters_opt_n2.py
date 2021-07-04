@@ -64,4 +64,4 @@ def hyperoptimization(epochs,param_grid,type='random'):
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
 #create_model(vocab_size, embedding_dim, maxlen)
-hyperoptimization(100,dict(vocab_size=[1000, 2000, 4000,5000], embedding_dim=[80,100,200,250], maxlen=[250]))
+#hyperoptimization(100,dict(vocab_size=[1000, 2000, 4000,5000], embedding_dim=[80,100,200,250], maxlen=[250]))
