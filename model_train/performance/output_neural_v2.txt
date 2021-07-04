@@ -1,0 +1,10 @@
+Modelo (Gravedad): Red Neuronal V2
+Best Accuracy : 0.4286
+{'vocab_size': 4000, 'maxlen': 250, 'embedding_dim': 100}
+Test Accuracy : 0.3684
+
+Modelo (Sesgo): Red Neuronal V2
+Best Accuracy : 0.5089
+{'vocab_size': 4000, 'maxlen': 250, 'embedding_dim': 100}
+Test Accuracy : 0.5789
+
