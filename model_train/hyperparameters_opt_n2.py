@@ -50,6 +50,8 @@ def hyperoptimization(epochs,param_grid,type='random'):
 
     # Save and evaluate results
     with open(output_file, 'a') as f:
+        f.write("Matriz de parámetros: ", param_grid)
+        f.write("Tipo: ", type)
         s = ('Modelo (Sesgo): {}\nBest Accuracy : '
             '{:.4f}\n{}\nTest Accuracy : {:.4f}\n\n')
         output_string = s.format(
@@ -59,3 +61,7 @@ def hyperoptimization(epochs,param_grid,type='random'):
             test_acc)
         print(output_string)
         f.write(output_string)
+        f.write('\n------------------------------------------------------------------------------------------------------\n')
+
+#create_model(vocab_size, embedding_dim, maxlen)
+hyperoptimization(100,dict(vocab_size=[1000, 2000, 4000,5000], embedding_dim=[80,100,200,250], maxlen=[250]))
