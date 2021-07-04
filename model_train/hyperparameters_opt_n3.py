@@ -50,7 +50,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     param_grid.update(dict(tokenizer = [tokenizer2]))
 
     if type == 'random':        
-        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5, n_jobs=-1)
+        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=25, n_jobs=-1)
     else:
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
 
@@ -71,4 +71,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
-hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/fasttext-sbwc.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [100,150,200]),type = 'random')
+#hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [20,40,60,100,150,200]),type = 'random')

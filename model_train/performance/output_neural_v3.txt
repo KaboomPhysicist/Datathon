@@ -42,3 +42,17 @@ Best Accuracy : 0.5000
 Test Accuracy : 0.5526
 
 ------------------------------------------------------------------------------------------------------
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/glove-sbwc.i25.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt'], 'embedding_dim': [20, 40, 60, 100, 150, 200], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f3424a1df70>], 'maxlen': [250]}
+Tipo:random
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.4107
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f3424a1df70>, 'maxlen': 250, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'embedding_dim': 200}
+Test Accuracy : 0.4211
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.5625
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f3424a1dfa0>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 200}
+Test Accuracy : 0.6842
+
+------------------------------------------------------------------------------------------------------
