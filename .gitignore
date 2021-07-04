@@ -1,3 +1,14 @@
 /embeddings
 /.vscode
 /__pycache__
+<<<<<<< HEAD
+=======
+*.pyc
+<<<<<<< HEAD
+setup.sh
+libs.sh
+=======
+setup.sh
+libs.sh
+>>>>>>> master
+>>>>>>> preembedded_optimization

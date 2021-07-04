@@ -1,0 +1,44 @@
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [80, 100, 200], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f04b8df6640>], 'maxlen': [250]}
+Tipo:random
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.4018
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f04b8df6640>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 200}
+Test Accuracy : 0.4211
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.5446
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f04b8df6640>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 200}
+Test Accuracy : 0.4737
+
+
+------------------------------------------------------------------------------------------------------
+
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [80, 100, 200], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f04b8df6640>], 'maxlen': [250]}
+Tipo:grid
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.4554
+{'embedding_dim': 80, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fc06bb11640>}
+Test Accuracy : 0.4211
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.5446
+{'embedding_dim': 200, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fc06bc36c10>}
+Test Accuracy : 0.6579
+
+------------------------------------------------------------------------------------------------------
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f2fdf2e6640>], 'maxlen': [250]}
+Tipo:random
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.4286
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f2fdf2e6640>, 'maxlen': 250, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'embedding_dim': 150}
+Test Accuracy : 0.4474
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.5000
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f2fdf40bc10>, 'maxlen': 250, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'embedding_dim': 100}
+Test Accuracy : 0.5526
+
+------------------------------------------------------------------------------------------------------

@@ -27,6 +27,8 @@ def hyperoptimization(epochs,param_grid,type='random'):
 
     # Save and evaluate results
     with open(output_file, 'a') as f:
+        f.write("Matriz de parámetros:{}".format(param_grid))
+        f.write("Tipo:{}".format(type))
         s = ('Modelo (Gravedad): {}\nBest Accuracy : '
             '{:.4f}\n{}\nTest Accuracy : {:.4f}\n\n')
         output_string = s.format(
@@ -41,7 +43,7 @@ def hyperoptimization(epochs,param_grid,type='random'):
                             batch_size = 10, verbose=False)
 
     if type=='random':        
-        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5)
+        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5, n_jobs=-1)
     else:
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
 
@@ -50,6 +52,7 @@ def hyperoptimization(epochs,param_grid,type='random'):
 
     # Save and evaluate results
     with open(output_file, 'a') as f:
+    
         s = ('Modelo (Sesgo): {}\nBest Accuracy : '
             '{:.4f}\n{}\nTest Accuracy : {:.4f}\n\n')
         output_string = s.format(
@@ -59,3 +62,7 @@ def hyperoptimization(epochs,param_grid,type='random'):
             test_acc)
         print(output_string)
         f.write(output_string)
+        f.write('\n------------------------------------------------------------------------------------------------------\n')
+
+#create_model(vocab_size, embedding_dim, maxlen)
+#hyperoptimization(100,dict(vocab_size=[1000, 2000, 4000,5000], embedding_dim=[80,100,200,250], maxlen=[250]))
