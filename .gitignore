@@ -1,3 +1,6 @@
 /embeddings
 /.vscode
 /__pycache__
+*.pyc
+libs.sh
+setup.sh
