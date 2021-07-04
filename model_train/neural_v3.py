@@ -1,4 +1,4 @@
-from extract_split_data import create_embedding_matrix, plot_history, data_preset
+from extract_split_data import create_embedding_matrix, plot_history, data_preset, pad
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,8 +11,15 @@ from keras.backend import clear_session
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
-def create_model(vocab_size, embedding_dim, embedding_matrix, maxlen):
+def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     #Declaración del modelo de Gravedad
+
+    tokenizer, tokenizer2 = data_preset()
+
+    vocab_size = len(tokenizer.word_index) + 1
+
+    embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
+
     model = Sequential()
     model.add(layers.Embedding(
         input_dim= vocab_size,
@@ -31,8 +38,12 @@ def create_model(vocab_size, embedding_dim, embedding_matrix, maxlen):
             )
     return model
 
-def create_model2(vocab_size, embedding_dim, embedding_matrix, maxlen):
-    #Declaración del modelo de Gravedad
+def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
+    #Declaración del modelo de sesgo
+    vocab_size = len(tokenizer.word_index) + 1
+
+    embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
+
     model = Sequential()
     model.add(layers.Embedding(
         input_dim= vocab_size,
@@ -56,15 +67,12 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
     maxlen = 250
 
     tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(maxlen, train=True)
-
-    vocab_size = len(tokenizer.word_index) + 1
-
+    X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
+    
     embedding_dim = 100
-    embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
-    embedding_matrix2 = create_embedding_matrix(embedding_path, tokenizer2.word_index, embedding_dim)
 
-    model = create_model(vocab_size, embedding_dim, embedding_matrix, maxlen)
-    model2 = create_model2(vocab_size, embedding_dim, embedding_matrix2, maxlen)
+    model = create_model(tokenizer, embedding_dim, embedding_path, maxlen)
+    model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
     model.summary()
     model2.summary()

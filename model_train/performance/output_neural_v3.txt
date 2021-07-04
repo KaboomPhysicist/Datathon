@@ -1,34 +1,10 @@
 Modelo (Gravedad): Red Neuronal V3
-Best Accuracy : 0.3393
-{'vocab_size': 2654, 'maxlen': 250, 'embedding_matrix': array([[ 0.        ,  0.        ,  0.        , ...,  0.        ,
-         0.        ,  0.        ],
-       [-0.10702   , -0.16535001, -0.023118  , ..., -0.16192999,
-         0.14675   , -0.23962   ],
-       [-0.10727   , -0.13511001, -0.12576   , ..., -0.10986   ,
-         0.14294   , -0.32045999],
-       ...,
-       [ 0.19688   , -0.44501001, -0.14094   , ...,  0.25029001,
-         0.13414   , -0.15362   ],
-       [-0.29475001,  0.0029178 , -0.094267  , ...,  0.42082   ,
-         0.51539999,  0.014302  ],
-       [-0.28780001, -0.27418   , -0.15440001, ..., -0.083745  ,
-        -0.0024118 , -0.17727   ]]), 'embedding_dim': 200}
-Test Accuracy : 0.4737
+Best Accuracy : 0.3929
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fa219356950>, 'maxlen': 250, 'embedding_path': 'embeddings/glove-sbwc.i25.vec', 'embedding_dim': 100}
+Test Accuracy : 0.3421
 
 Modelo (Sesgo): Red Neuronal V3
-Best Accuracy : 0.4464
-{'vocab_size': 2654, 'maxlen': 250, 'embedding_matrix': array([[ 0.        ,  0.        ,  0.        , ...,  0.        ,
-         0.        ,  0.        ],
-       [-0.10702   , -0.16535001, -0.023118  , ..., -0.16192999,
-         0.14675   , -0.23962   ],
-       [-0.10727   , -0.13511001, -0.12576   , ..., -0.10986   ,
-         0.14294   , -0.32045999],
-       ...,
-       [ 0.19688   , -0.44501001, -0.14094   , ...,  0.25029001,
-         0.13414   , -0.15362   ],
-       [-0.29475001,  0.0029178 , -0.094267  , ...,  0.42082   ,
-         0.51539999,  0.014302  ],
-       [-0.28780001, -0.27418   , -0.15440001, ..., -0.083745  ,
-        -0.0024118 , -0.17727   ]]), 'embedding_dim': 200}
-Test Accuracy : 0.6053
+Best Accuracy : 0.5446
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fa219356950>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 200}
+Test Accuracy : 0.6579
 

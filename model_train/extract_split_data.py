@@ -123,7 +123,7 @@ def vectorized_set(only_vectorizer=False):
                 return vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
 
 #Función que devuelve los conjuntos de datos tokenizados (para Embedding)
-def data_preset(maxlen, train = False):
+def data_preset(train = False):
     sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets()
     ses_test+=1
     ses_train+=1
@@ -141,16 +141,19 @@ def data_preset(maxlen, train = False):
         X_ses_train = tokenizer2.texts_to_sequences(sentences_ses_train)
         X_ses_test = tokenizer2.texts_to_sequences(sentences_ses_test)
 
+        return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
+
+    else:
+        return tokenizer, tokenizer2 
+
+def pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen):
         X_grav_train = pad_sequences(X_grav_train, padding='post', maxlen=maxlen)
         X_grav_test = pad_sequences(X_grav_test, padding='post', maxlen=maxlen)
 
         X_ses_train = pad_sequences(X_ses_train, padding='post',maxlen=maxlen)
         X_ses_test = pad_sequences(X_ses_test, padding='post',maxlen=maxlen)
 
-        return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
-
-    else:
-        return tokenizer, tokenizer2 
+        return X_grav_train, X_grav_test, X_ses_train, X_ses_test
 
 #Crea la matriz de embedding a partir de los datos de preembedding
 def create_embedding_matrix(filepath, word_index, embedding_dim):
