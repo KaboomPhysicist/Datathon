@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from time import sleep
 
+#If you get "AttributeError: 'Translator' object has no attribute 'raise_Exception'", change your IP adress using a VPN.
+
 
 CSV_Path ="../data/DataSet (Augmentation.test).csv"
 LANG = 'en'
