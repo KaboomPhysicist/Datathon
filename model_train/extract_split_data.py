@@ -123,8 +123,8 @@ def vectorized_set(only_vectorizer=False):
                 return vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
 
 #Función que devuelve los conjuntos de datos tokenizados (para Embedding)
-def data_preset(train = False):
-    sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets()
+def data_preset(train = False, descarga=False):
+    sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga)
     ses_test+=1
     ses_train+=1
 
@@ -168,3 +168,6 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
                 embedding_matrix[idx] = np.array(vector, dtype=np.float32)[:embedding_dim]
 
     return embedding_matrix
+
+
+sets(tipo='moda', descarga=True, graph=True)
