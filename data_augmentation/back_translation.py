@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from time import sleep
 
 
-CSV_Path ="../data/clasificacion.csv"
+CSV_Path ="../data/DataSet (Augmentation.test).csv"
 LANG = 'en'
 OLANG = 'es'
 API = 'google'
@@ -19,7 +19,10 @@ def translate(df, LANG, OLANG):
 
     for element in df_en['Item (Texto)'].unique():
         sleep(1)
-        translations[element] =  trans.translate(text=element, src=OLANG, tmp = LANG).result_text
+        try:
+            translations[element] =  trans.translate(element, src=OLANG, tmp = LANG).result_text
+        except TypeError:
+            translations[element] = element
     df_en.replace(translations, inplace = True)
     
     return df_en
