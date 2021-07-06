@@ -1,6 +1,7 @@
 import pandas as pd
 import translators as ts
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 CSV_Path ="../data/clasificacion.csv"
