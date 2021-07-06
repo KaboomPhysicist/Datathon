@@ -14,8 +14,6 @@ from keras.preprocessing.sequence import pad_sequences
 def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     #Declaración del modelo de Gravedad
 
-    tokenizer, tokenizer2 = data_preset()
-
     vocab_size = len(tokenizer.word_index) + 1
 
     embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
@@ -30,7 +28,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     ))
 
     model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(10, activation='relu'))
+    model.add(layers.Dense(25, activation='sigmoid'))
     model.add(layers.Dense(4, activation='softmax'))
     model.compile(optimizer='adam',
                     loss='sparse_categorical_crossentropy',
@@ -54,6 +52,7 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
     ))
 
     model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(25, activation='sigmoid'))
     model.add(layers.Dense(10, activation='relu'))
     model.add(layers.Dense(3, activation='softmax'))
     model.compile(optimizer='adam',
@@ -62,14 +61,14 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
             )
     return model
 
-def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/embeddings-l-model.vec'):
+def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/embeddings-l-model.vec', descarga=False):
 
-    maxlen = 250
+    maxlen = 100
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(maxlen, train=True)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=descarga)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
     
-    embedding_dim = 100
+    embedding_dim = 150
 
     model = create_model(tokenizer, embedding_dim, embedding_path, maxlen)
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
