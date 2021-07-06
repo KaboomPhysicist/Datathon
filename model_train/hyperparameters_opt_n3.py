@@ -8,7 +8,9 @@ from extract_split_data import data_preset, pad
 
 #param_grid : tokenizer, embedding_dim, embedding_path, maxlen
 
+#Función para optimizar los hiperparámetros del modelo de red neuronal de neural_v3.py
 def hyperoptimization(epochs, param_grid, type = 'random'):
+    #Archivo donde se guardaran los resultados de parámetros óptimos
     output_file = 'model_train/performance/output_neural_v3.txt'
 
     maxlen = 250
@@ -16,12 +18,15 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(True)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
 
+    #A la matriz de parámetros a probar se le añade el tokenizer y el maxlen, los cuales son únicos bajo este código y se establecen dentro del mismo.
     param_grid.update(dict(tokenizer = [tokenizer],maxlen = [maxlen]))
 
+    #Declaración del modelo para gravedad
     model = KerasClassifier(build_fn = n3.create_model, epochs = epochs,
                             batch_size = 10, verbose=False)
 
-    if type == 'random':        
+    #Elección del método para buscar los hiperparámetros
+    if type == 'random':
         grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5)
     else:
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
@@ -47,9 +52,10 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     model = KerasClassifier(build_fn = n3.create_model2, epochs = epochs,
                             batch_size = 10, verbose=False)
 
+    #Cambia el tokenizer (se supone que es diferente para sesgo y para gravedad)
     param_grid.update(dict(tokenizer = [tokenizer2]))
 
-    if type == 'random':        
+    if type == 'random':
         grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=25, n_jobs=-1)
     else:
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
@@ -71,4 +77,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
-#hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/glove-sbwc.i25.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [20,40,60,100,150,200]),type = 'random')
+hyperoptimization(70, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [75,125,175,310,500]),type = 'random')
