@@ -18,7 +18,7 @@ from keras.preprocessing.sequence import pad_sequences
 #Función extractora de datos desde el servidor
 def sets(tipo='moda', descarga=False, join=False, graph=False):
         if descarga:
-                data_download()
+	        data_download()
 
         filepath = 'data/clasificacion.csv'
         df=pd.read_csv(filepath)
@@ -168,6 +168,3 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
                 embedding_matrix[idx] = np.array(vector, dtype=np.float32)[:embedding_dim]
 
     return embedding_matrix
-
-
-sets(tipo='moda', descarga=True, graph=True)

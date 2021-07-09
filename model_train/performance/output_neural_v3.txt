@@ -69,4 +69,46 @@ Best Accuracy : 0.5446
 {'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f28eeedaaf0>, 'maxlen': 250, 'embedding_path': 'embeddings/fasttext-sbwc.3.6.e20.vec', 'embedding_dim': 175}
 Test Accuracy : 0.6053
 
+--------------------------------------------------------------------------------------------------------
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.3.6.e20.vec', 'embeddings/SBW-vectors-300-min5.txt'], 'embedding_dim': [75, 125, 175, 300, 425, 500, 1000], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7fdf56cf5640>], 'maxlen': [250]}
+Tipo:grid
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.5037
+{'embedding_dim': 75, 'embedding_path': 'embeddings/SBW-vectors-300-min5.txt', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fdf56cf5640>}
+Test Accuracy : 0.4250
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.6147
+{'embedding_dim': 300, 'embedding_path': 'embeddings/SBW-vectors-300-min5.txt', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7fdf56cf5af0>}
+Test Accuracy : 0.5750
+
+------------------------------------------------------------------------------------------------------
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.3.6.e20.vec', 'embeddings/SBW-vectors-300-min5.txt'], 'embedding_dim': [75, 125, 175, 300, 425, 500, 1000], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f61297b1640>], 'maxlen': [250]}
+Tipo:grid
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.4556
+{'embedding_dim': 175, 'embedding_path': 'embeddings/fasttext-sbwc.3.6.e20.vec', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f61297b1640>}
+Test Accuracy : 0.4048
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.5777
+{'embedding_dim': 300, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'maxlen': 250, 'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f61298d6c10>}
+Test Accuracy : 0.4762
+
+------------------------------------------------------------------------------------------------------
+Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.3.6.e20.vec', 'embeddings/SBW-vectors-300-min5.txt'], 'embedding_dim': [300, 500, 1000], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x7f1f82914640>], 'maxlen': [250]}
+Tipo:random
+
+Modelo (Gravedad): Red Neuronal V3
+Best Accuracy : 0.5000
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f1f82914640>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 300}
+Test Accuracy : 0.4800
+
+Modelo (Sesgo): Red Neuronal V3
+Best Accuracy : 0.4595
+{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x7f1f82a39c10>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 300}
+Test Accuracy : 0.5800
+
 ------------------------------------------------------------------------------------------------------

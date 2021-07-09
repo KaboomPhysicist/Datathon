@@ -15,7 +15,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
 
     maxlen = 250
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(True)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=False)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
 
     #A la matriz de parámetros a probar se le añade el tokenizer y el maxlen, los cuales son únicos bajo este código y se establecen dentro del mismo.
@@ -77,4 +77,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
-#hyperoptimization(70, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [75,125,175,310,500]),type = 'random')
+hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [300,500,1000]),type = 'random')
