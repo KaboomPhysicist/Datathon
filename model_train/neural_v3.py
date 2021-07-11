@@ -73,6 +73,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
     model = create_model(tokenizer, embedding_dim, embedding_path, maxlen)
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
+    
     model.summary()
     model2.summary()
 
@@ -90,6 +91,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
                     validation_data=(X_ses_test, ses_test),
                     batch_size=10)
         
+    #history.get_params()
 
     loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
     print("Precisión de entrenamiento (Gravedad): {:.4f}".format(accuracy))
@@ -123,3 +125,6 @@ def modelo(pers_test):
     test2 = pad_sequences(test2, padding='post', maxlen= maxlen)
 
     print(model_grav.predict(test1),model_ses.predict(test2))
+
+if __name__=="__main__":
+   train_neural_basic_preembedding()
