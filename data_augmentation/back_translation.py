@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from time import sleep
 
 #If you get "AttributeError: 'Translator' object has no attribute 'raise_Exception'", change your IP adress using a VPN.
-
+#This implements back translation to all the dataset, in order to do it independently for X_train and X_test you need to edit the main function 
 
 CSV_Path ="../data/DataSet (Augmentation.test).csv"
 LANG = 'en'
