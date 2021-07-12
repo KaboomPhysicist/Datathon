@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 #If you get "AttributeError: 'Translator' object has no attribute 'raise_Exception'", change your IP adress using a VPN.
 
-#This implements back translation only to the train split, and the result is two dataframes, one for testin and one for training
+#This implements back translation only to the training split, and the result is two dataframes, one for testing and one for training
 
 
 CSV_Path ="../data/DataSet (Augmentation.test).csv"
