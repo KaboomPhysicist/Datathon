@@ -1,7 +1,5 @@
 import pandas as pd
 from BackTranslation import BackTranslation
-import seaborn as sns
-import matplotlib.pyplot as plt
 from time import sleep
 from sklearn.model_selection import train_test_split
 
