@@ -4,11 +4,11 @@ from time import sleep
 from sklearn.model_selection import train_test_split
 
 #If you get "AttributeError: 'Translator' object has no attribute 'raise_Exception'", change your IP adress using a VPN.
-
+#This is meant to be used after nlpaug
 #This implements back translation only to the training split, and the result is two dataframes, one for testing and one for training
 
 
-CSV_Path ="../data/DataSet (Augmentation.test).csv"
+CSV_Path ="nlpaug_data.csv"
 LANG = 'en'
 OLANG = 'es'
 API = 'google'
@@ -32,9 +32,6 @@ def translate(df, LANG, OLANG):
     
 def main():
     df = pd.read_csv(CSV_Path, header = 0)
-    df['GravedadMode'] = df['Gravedad'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
-    df['SesgoMode'] = df['Sesgo'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
-    df = df[['Item (Texto)', 'GravedadMode', 'SesgoMode']]
     x = df['Item (Texto)'].values
     y = df['GravedadMode'].values
     
