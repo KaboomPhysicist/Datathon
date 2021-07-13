@@ -91,16 +91,16 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
     es=EarlyStopping(monitor='val_loss',patience=50, restore_best_weights=True)
 
     history = model.fit(X_grav_train, grav_train,
-                    epochs=2048,
-                    verbose=False,
+                    epochs=200,
+                    verbose=True,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=128,callbacks=[es])
+                    batch_size=10)
 
     history2 = model2.fit(X_ses_train, ses_train,
-                    epochs=2048,
+                    epochs=200,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    batch_size=128,callbacks=[es])
+                    batch_size=10)
         
     #history.get_params()
 
@@ -138,4 +138,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-   train_neural_basic_preembedding(graph=True, descarga=True)
+   train_neural_basic_preembedding()
