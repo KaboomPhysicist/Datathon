@@ -3,13 +3,15 @@ from extract_split_data import create_embedding_matrix, plot_history, data_prese
 import matplotlib.pyplot as plt
 import numpy as np
 
-from keras.models import Sequential
-from keras.models import load_model
-from keras import layers
-from keras.backend import clear_session
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import load_model
+from tensorflow.keras import layers
+from tensorflow.keras.backend import clear_session
+from tensorflow.keras import optimizers
 
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import EarlyStopping
 
 def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     #Declaración del modelo de Gravedad
@@ -30,7 +32,14 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(25, activation='sigmoid'))
     model.add(layers.Dense(4, activation='softmax'))
-    model.compile(optimizer='adam',
+
+    lr_schedule = optimizers.schedules.ExponentialDecay(initial_learning_rate=1e-2,
+                                                        decay_steps=10000,
+                                                        decay_rate=0.9)
+
+    opt = optimizers.Adam(learning_rate=lr_schedule, clipnorm = 1, clipvalue = 0.5)
+
+    model.compile(optimizer=opt,
                     loss='sparse_categorical_crossentropy',
                     metrics=['accuracy']
             )
@@ -52,7 +61,7 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
     ))
 
     model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(25, activation='sigmoid'))
+    model.add(layers.Dense(15,activation='relu'))
     model.add(layers.Dense(10, activation='relu'))
     model.add(layers.Dense(3, activation='softmax'))
     model.compile(optimizer='adam',
@@ -79,17 +88,19 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
 
     clear_session()
 
+    es=EarlyStopping(monitor='val_loss',patience=50, restore_best_weights=True)
+
     history = model.fit(X_grav_train, grav_train,
-                    epochs=100,
+                    epochs=2048,
                     verbose=False,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=10)
+                    batch_size=128,callbacks=[es])
 
     history2 = model2.fit(X_ses_train, ses_train,
-                    epochs=100,
+                    epochs=2048,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    batch_size=10)
+                    batch_size=128,callbacks=[es])
         
     #history.get_params()
 
@@ -127,4 +138,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-   train_neural_basic_preembedding()
+   train_neural_basic_preembedding(graph=True, descarga=True)
