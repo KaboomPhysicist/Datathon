@@ -3,6 +3,9 @@ from extract_split_data import create_embedding_matrix, plot_history, data_prese
 import matplotlib.pyplot as plt
 import numpy as np
 
+import tensorflow as tf
+from keras import backend as K
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras import layers
@@ -72,6 +75,9 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
 
 def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/embeddings-l-model.vec', descarga=False):
 
+    tf.config.threading.set_intra_op_parallelism_threads(2)
+    tf.config.threading.set_inter_op_parallelism_threads(2) 
+  
     maxlen = 100
 
     tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True)
@@ -92,7 +98,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
 
     history = model.fit(X_grav_train, grav_train,
                     epochs=200,
-                    verbose=True,
+                    verbose=False,
                     validation_data=(X_grav_test, grav_test),
                     batch_size=10)
 
