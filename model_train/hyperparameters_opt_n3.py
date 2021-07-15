@@ -1,4 +1,4 @@
-from keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 
