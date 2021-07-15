@@ -126,15 +126,7 @@ Best Accuracy : 0.5135
 Test Accuracy : 0.5400
 
 ------------------------------------------------------------------------------------------------------
-Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150, 200, 750], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x00000256B39B5E50>], 'maxlen': [250]}
-Tipo:random
-
-Modelo (Gravedad): Red Neuronal V3
-Best Accuracy : 0.4865
-{'tokenizer': <keras_preprocessing.text.Tokenizer object at 0x00000256B39B5E50>, 'maxlen': 250, 'embedding_path': 'embeddings/embeddings-l-model.vec', 'embedding_dim': 150}
-Test Accuracy : 0.5200
-
-Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150, 200, 750], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x0000014C31A8DFD0>], 'maxlen': [250]}
+Matriz de parï¿½metros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150, 200, 750], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x0000014C31A8DFD0>], 'maxlen': [250]}
 Tipo:random
 
 Modelo (Gravedad): Red Neuronal V3
@@ -148,7 +140,7 @@ Best Accuracy : 0.5068
 Test Accuracy : 0.5400
 
 ------------------------------------------------------------------------------------------------------
-Matriz de parámetros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150, 170, 200], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x0000018894B2EC10>], 'maxlen': [250]}
+Matriz de parï¿½metros:{'embedding_path': ['embeddings/embeddings-l-model.vec', 'embeddings/fasttext-sbwc.vec', 'embeddings/SBW-vectors-300-min5.txt', 'embeddings/glove-sbwc.i25.vec'], 'embedding_dim': [100, 150, 170, 200], 'tokenizer': [<keras_preprocessing.text.Tokenizer object at 0x0000018894B2EC10>], 'maxlen': [250]}
 Tipo:grid
 
 Modelo (Gravedad): Red Neuronal V3

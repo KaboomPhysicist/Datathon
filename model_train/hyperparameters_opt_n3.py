@@ -32,7 +32,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     if type == 'random':
         grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5)
     else:
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=Flase,n_jobs=2)
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=False,n_jobs=2)
 
 
     grid_result = grid.fit(X_grav_train, grav_train)
