@@ -25,6 +25,16 @@ def augmen(df):
     
     return df_a
 
+def augmen_array(arr, val_arr):
+    aug = synonym.SynonymAug(aug_src='wordnet',lang='spa')
+
+    for pos, score in enumerate(val_arr):
+            if score==0:
+                    arr=append(arr,aug.augment(arr[pos]))
+                    val_arr=append(val_arr,0)
+
+    return arr, val_arr
+
 def main():
     df = pd.read_csv(CSV_Path, header = 0)
     df['GravedadMode'] = df['Gravedad'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
