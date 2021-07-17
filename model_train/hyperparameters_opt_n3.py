@@ -2,9 +2,6 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 
-import tensorflow as tf
-from tensorflow.keras import backend as K
-
 import neural_v3 as n3
 
 from extract_split_data import data_preset, pad
@@ -26,7 +23,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     
     #Declaración del modelo para gravedad
     model = KerasClassifier(build_fn = n3.create_model, epochs = epochs,
-                            batch_size = 64, verbose=True)
+                            batch_size = 64, verbose=False)
 
     #Elección del método para buscar los hiperparámetros
     if type == 'random':
@@ -53,7 +50,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
 
     model = KerasClassifier(build_fn = n3.create_model2, epochs = epochs,
-                            batch_size = 64, verbose=True)
+                            batch_size = 64, verbose=False)
 
     #Cambia el tokenizer (se supone que es diferente para sesgo y para gravedad)
     param_grid.update(dict(tokenizer = [tokenizer2]))
@@ -81,4 +78,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
 if __name__=='__main__':
-    hyperoptimization(150, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.vec','embeddings/SBW-vectors-300-min5.txt','embeddings/glove-sbwc.i25.vec'],embedding_dim = [100,150,170,200]),type='grid')
+    hyperoptimization(150, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.vec','embeddings/SBW-vectors-300-min5.txt','embeddings/glove-sbwc.i25.vec'],embedding_dim = [100,150]),type='random')

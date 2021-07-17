@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import tensorflow as tf
-from keras import backend as K
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
