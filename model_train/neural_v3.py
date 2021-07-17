@@ -72,14 +72,10 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
             )
     return model
 
-def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/embeddings-l-model.vec', descarga=False):
-
-    tf.config.threading.set_intra_op_parallelism_threads(2)
-    tf.config.threading.set_inter_op_parallelism_threads(2) 
-  
+def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings/embeddings-l-model.vec', descarga=False):
     maxlen = 100
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=descarga)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
     
     embedding_dim = 150
@@ -124,12 +120,12 @@ def train_neural_basic_preembedding(graph=False, embedding_path = 'embeddings/em
         plot_history(history2)
         plt.show()
 
-    model.save('models/neural_v3_grav.h5')
-    model2.save('models/neural_v3_ses.h5')
+    model.save('../models/neural_v3_grav.h5')
+    model2.save('../models/neural_v3_ses.h5')
 
 def modelo(pers_test):
-    model_grav = load_model('models/neural_v3_grav.h5')
-    model_ses = load_model('models/neural_v3_ses.h5')
+    model_grav = load_model('../models/neural_v3_grav.h5')
+    model_ses = load_model('../models/neural_v3_ses.h5')
 
     maxlen = 250
 
@@ -143,4 +139,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-   train_neural_basic_preembedding()
+   train_neural_basic_preembedding(True, descarga=True)
