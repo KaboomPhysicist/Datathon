@@ -8,6 +8,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from drive.quickstart_drive import data_download
 
+from data_augmentation.synaug import augmen_array
+from data_augmentation.back_translation import translate_array
+
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -79,29 +82,40 @@ def sets(tipo='moda', descarga=False, join=False, graph=False):
                                 np.array(sentences), np.array(grav), test_size=0.25, random_state=1000)
 
                         sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo), test_size=0.25, random_state=1000)
-
+                                np.array(sentences), np.array(sesgo), test_size=0.25, random_state=1000)            
+                        
                 return sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test
+
+def aumentar(sentences_grav_train, grav_train, sentences_ses_train, ses_train):
+        sgrav_aug, grav_aug = augmen_array(sentences_grav_train,grav_train)
+        sses_aug, ses_aug = augmen_array(sentences_ses_train, ses_train)
+
+        sgrav_trans, grav_trans = translate_array(sgrav_aug, grav_aug, 'en', 'es')
+        sses_trans, ses_trans = translate_array(sses_aug, ses_aug, 'en','es')
+
+        return sgrav_trans, grav_trans, sses_trans, ses_trans
+
+
 
 #Función graficadora de la precisón y el error de los modelos.
 def plot_history(history):
-    acc = history.history['accuracy']
-    val_acc = history.history['val_accuracy']
-    loss = history.history['loss']
-    val_loss = history.history['val_loss']
-    x = range(1, len(acc) + 1)
+        acc = history.history['accuracy']
+        val_acc = history.history['val_accuracy']
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        x = range(1, len(acc) + 1)
 
-    plt.figure(figsize=(12, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(x, acc, 'b', label='Training acc')
-    plt.plot(x, val_acc, 'r', label='Validation acc')
-    plt.title('Training and validation accuracy')
-    plt.legend()
-    plt.subplot(1, 2, 2)
-    plt.plot(x, loss, 'b', label='Training loss')
-    plt.plot(x, val_loss, 'r', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.legend()
+        plt.figure(figsize=(12, 5))
+        plt.subplot(1, 2, 1)
+        plt.plot(x, acc, 'b', label='Training acc')
+        plt.plot(x, val_acc, 'r', label='Validation acc')
+        plt.title('Training and validation accuracy')
+        plt.legend()
+        plt.subplot(1, 2, 2)
+        plt.plot(x, loss, 'b', label='Training loss')
+        plt.plot(x, val_loss, 'r', label='Validation loss')
+        plt.title('Training and validation loss')
+        plt.legend()
 
 #Función que devuelve los conjuntos de datos vectorizados (CountVectorizer)
 def vectorized_set(only_vectorizer=False):
@@ -123,28 +137,32 @@ def vectorized_set(only_vectorizer=False):
                 return vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
 
 #Función que devuelve los conjuntos de datos tokenizados (para Embedding)
-def data_preset(train = False, descarga=False):
-    sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga)
-    ses_test+=1
-    ses_train+=1
+def data_preset(train = False, augmention= False, descarga=False):
+        sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga)
 
-    tokenizer = Tokenizer(num_words=5000)
-    tokenizer.fit_on_texts(sentences_grav_train)
+        if augmention==True:
+                sentences_grav_train, grav_train, sentences_ses_train, ses_train = aumentar(sentences_grav_train, grav_train, sentences_ses_train, ses_train)
 
-    tokenizer2 = Tokenizer(num_words=5000)
-    tokenizer2.fit_on_texts(sentences_ses_train)
+        ses_test+=1
+        ses_train+=1
 
-    if train:
-        X_grav_train = tokenizer.texts_to_sequences(sentences_grav_train)
-        X_grav_test  = tokenizer.texts_to_sequences(sentences_grav_test)
+        tokenizer = Tokenizer(num_words=5000)
+        tokenizer.fit_on_texts(sentences_grav_train)
 
-        X_ses_train = tokenizer2.texts_to_sequences(sentences_ses_train)
-        X_ses_test = tokenizer2.texts_to_sequences(sentences_ses_test)
+        tokenizer2 = Tokenizer(num_words=5000)
+        tokenizer2.fit_on_texts(sentences_ses_train)
 
-        return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
+        if train:
+                X_grav_train = tokenizer.texts_to_sequences(sentences_grav_train)
+                X_grav_test  = tokenizer.texts_to_sequences(sentences_grav_test)
 
-    else:
-        return tokenizer, tokenizer2 
+                X_ses_train = tokenizer2.texts_to_sequences(sentences_ses_train)
+                X_ses_test = tokenizer2.texts_to_sequences(sentences_ses_test)
+
+                return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
+
+        else:
+                return tokenizer, tokenizer2 
 
 def pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen):
         X_grav_train = pad_sequences(X_grav_train, padding='post', maxlen=maxlen)

@@ -1,4 +1,4 @@
-from extract_split_data import create_embedding_matrix, plot_history, data_preset, pad
+from extract_split_data import create_embedding_matrix, plot_history, data_preset, pad, aumentar
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -72,10 +72,10 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
             )
     return model
 
-def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings/embeddings-l-model.vec', descarga=False):
+def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings/embeddings-l-model.vec', descarga=False, augmention = False):
     maxlen = 100
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=descarga)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=descarga, augmention=augmention)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
     
     embedding_dim = 150
@@ -84,8 +84,8 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
     
-    model.summary()
-    model2.summary()
+    #model.summary()
+    #model2.summary()
 
     clear_session()
 
@@ -139,4 +139,5 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-   train_neural_basic_preembedding(True, descarga=True)
+    for i in range(10):
+        train_neural_basic_preembedding(False, augmention=False)
