@@ -11,8 +11,8 @@ from drive.quickstart_drive import data_download
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 #Función extractora de datos desde el servidor
@@ -160,7 +160,7 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
     vocab_size = len(word_index) + 1
     embedding_matrix = np.zeros((vocab_size, embedding_dim))
 
-    with open(filepath) as f:
+    with open(filepath, encoding='utf8') as f:
         for line in f:
             word, *vector = line.split()
             if word in word_index:

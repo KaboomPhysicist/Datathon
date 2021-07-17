@@ -1,4 +1,4 @@
-from keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 
@@ -20,16 +20,16 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
 
     #A la matriz de parámetros a probar se le añade el tokenizer y el maxlen, los cuales son únicos bajo este código y se establecen dentro del mismo.
     param_grid.update(dict(tokenizer = [tokenizer],maxlen = [maxlen]))
-
+    
     #Declaración del modelo para gravedad
     model = KerasClassifier(build_fn = n3.create_model, epochs = epochs,
-                            batch_size = 10, verbose=False)
+                            batch_size = 64, verbose=False)
 
     #Elección del método para buscar los hiperparámetros
     if type == 'random':
         grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=5)
     else:
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=False,n_jobs=2)
 
 
     grid_result = grid.fit(X_grav_train, grav_train)
@@ -50,15 +50,15 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
 
     model = KerasClassifier(build_fn = n3.create_model2, epochs = epochs,
-                            batch_size = 10, verbose=False)
+                            batch_size = 64, verbose=False)
 
     #Cambia el tokenizer (se supone que es diferente para sesgo y para gravedad)
     param_grid.update(dict(tokenizer = [tokenizer2]))
 
     if type == 'random':
-        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=25, n_jobs=-1)
+        grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, cv=4, verbose=False, n_iter=25)
     else:
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=1, n_jobs=-1)
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=4, verbose=False, n_jobs=2)
 
 
     grid_result = grid.fit(X_ses_train, ses_train)
@@ -77,4 +77,5 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
         f.write(output_string)
         f.write('\n------------------------------------------------------------------------------------------------------\n')
 
-hyperoptimization(80, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.3.6.e20.vec','embeddings/SBW-vectors-300-min5.txt'],embedding_dim = [100,200,300,500,750,1000]),type = 'grid')
+if __name__=='__main__':
+    hyperoptimization(150, dict(embedding_path = ['embeddings/embeddings-l-model.vec','embeddings/fasttext-sbwc.vec','embeddings/SBW-vectors-300-min5.txt','embeddings/glove-sbwc.i25.vec'],embedding_dim = [100,150]),type='random')
