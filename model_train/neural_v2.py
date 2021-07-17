@@ -1,12 +1,12 @@
 from extract_split_data import plot_history, data_preset, pad
 
-from keras.models import Sequential
-from keras.models import load_model
-from keras import layers
-from keras.backend import clear_session
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import load_model
+from tensorflow.keras import layers
+from tensorflow.keras.backend import clear_session
 
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -96,13 +96,13 @@ def train_neural_basic_embedding(graph=False):
         plot_history(history2)
         plt.show()
 
-    model.save('models/neural_v2_grav.h5')
-    model2.save('models/neural_v2_ses.h5')
+    model.save('../models/neural_v2_grav.h5')
+    model2.save('../models/neural_v2_ses.h5')
 
 
 def modelo(pers_test):
-    model_grav = load_model('models/neural_v2_grav.h5')
-    model_ses = load_model('models/neural_v2_ses.h5')
+    model_grav = load_model('../models/neural_v2_grav.h5')
+    model_ses = load_model('../models/neural_v2_ses.h5')
 
     maxlen = 250
 

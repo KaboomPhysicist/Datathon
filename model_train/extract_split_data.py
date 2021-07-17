@@ -20,7 +20,7 @@ def sets(tipo='moda', descarga=False, join=False, graph=False):
         if descarga:
 	        data_download()
 
-        filepath = 'data/clasificacion.csv'
+        filepath = '../data/clasificacion.csv'
         df=pd.read_csv(filepath)
 
         #Elimina las filas con la columna de Item vacío
