@@ -114,6 +114,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     print("Precisión de entrenamiento (Sesgo): {:.4f}".format(accuracy))
     loss, accuracy = model2.evaluate(X_ses_test, ses_test, verbose=False)
     print("Precisión de prueba (Sesgo):  {:.4f}".format(accuracy))
+    print("--------------------------------------------------------------------")
 
     if graph:
         plot_history(history)
