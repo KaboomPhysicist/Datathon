@@ -15,7 +15,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
 
     maxlen = 250
 
-    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=False)
+    tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, descarga=False, augment=True)
     X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
 
     #A la matriz de parámetros a probar se le añade el tokenizer y el maxlen, los cuales son únicos bajo este código y se establecen dentro del mismo.
