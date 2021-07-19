@@ -7,7 +7,7 @@ from nlpaug.augmenter.word import synonym
 #This script implements Synonym Augmenter, only to the rows with GravedadMode value equal to 0, the result is the augmented dataframe 
 #This is meant to be used before the final augmentation
 
-CSV_Path ="../data/clasificacion.csv"
+CSV_Path ="../data/DataSet (Augmentation.test).csv"
 
 def augmen(df):
     augmentation = {}
