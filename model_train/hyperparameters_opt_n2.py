@@ -1,4 +1,4 @@
-from keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 
@@ -7,7 +7,7 @@ import neural_v2 as n2
 from extract_split_data import data_preset, pad
 
 def hyperoptimization(epochs,param_grid,type='random'):
-    output_file = 'model_train/performance/output_neural_v2.txt'
+    output_file = 'performance/output_neural_v2.txt'
 
     #param_grid = dict(vocab_size=[1000, 2000, 4000,5000], embedding_dim=[80,100,200,250], maxlen=[250])
         

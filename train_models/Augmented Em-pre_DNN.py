@@ -11,7 +11,7 @@ data_download()
 
 from data_augmentation.back_translation import maind
 
-from data_augmentation.nlpaug import main
+from data_augmentation.synaug import main
 
 import nltk
 nltk.download('averaged_perceptron_tagger')

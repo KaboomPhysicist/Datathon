@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from pandas.core.frame import DataFrame
 from scipy.stats import mode
 import matplotlib.pyplot as plt
 
@@ -7,6 +8,9 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from drive.quickstart_drive import data_download
+
+from data_augmentation.synaug import augmen_array
+from data_augmentation.back_translation import translate_array
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
@@ -16,11 +20,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 #Función extractora de datos desde el servidor
-def sets(tipo='moda', descarga=False, join=False, graph=False):
+def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, update=False):
         if descarga:
 	        data_download()
 
-        filepath = 'data/clasificacion.csv'
+        filepath = '../data/clasificacion.csv'
         df=pd.read_csv(filepath)
 
         #Elimina las filas con la columna de Item vacío
@@ -37,7 +41,6 @@ def sets(tipo='moda', descarga=False, join=False, graph=False):
         sesgo_moda = [mode(list(map(int,i.split(','))))[0][0] for i in df['Sesgo']]
 
         #Gráficas de la distribución de los datos
-
         if graph:
                 fig, axs = plt.subplots(2,2)
                 axs[0,0].hist(grav,[0,1,2,3,4], align= 'mid', rwidth=0.8, color='skyblue')
@@ -79,29 +82,69 @@ def sets(tipo='moda', descarga=False, join=False, graph=False):
                                 np.array(sentences), np.array(grav), test_size=0.25, random_state=1000)
 
                         sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo), test_size=0.25, random_state=1000)
+                                np.array(sentences), np.array(sesgo), test_size=0.25, random_state=1000)            
+                
+                if augment:
+                        if update:
+                                augmen_array(sentences, grav_moda, sesgo_moda)
+                                translate_array(sentences, grav_moda, sesgo_moda,'en','es')
+
+                        aug_df = pd.read_csv('../data/clasificacion_augmented.csv')
+                        trans_df = pd.read_csv('../data/clasificacion_backtranslate.csv')
+
+                        pos_grav = []
+                        pos_ses = []
+
+                        aug_sentences = aug_df["Item (Texto)"].values
+                        trans_sentences = trans_df["Item (Texto)"].values
+
+                        aug_grav = []
+                        aug_ses = []
+
+
+                        for position, sentence in enumerate(sentences_grav_train):
+                                pos = np.where(np.array(sentences)==sentence)
+                                pos_grav.append(pos[0][0])
+
+                                if grav_train[position]==0:
+                                        aug_grav.append(aug_sentences[position])
+                                        grav_train = np.append(grav_train,0)
+
+                                grav_train = np.append(grav_train, grav_moda[pos[0][0]])
+                                aug_grav.append(*trans_sentences[pos])
+                                
+                        sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None)
+
+                        for position, sentence in enumerate(sentences_ses_train):
+                                pos = np.where(np.array(sentences)==sentence)
+                                pos_ses.append(pos[0][0])
+
+                                ses_train = np.append(ses_train, sesgo_moda[pos[0][0]])
+                                aug_ses.append(*trans_sentences[pos])
+                                
+                        sentences_ses_train=np.concatenate((sentences_ses_train, np.array(aug_ses)),axis=None)
 
                 return sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test
 
 #Función graficadora de la precisón y el error de los modelos.
 def plot_history(history):
-    acc = history.history['accuracy']
-    val_acc = history.history['val_accuracy']
-    loss = history.history['loss']
-    val_loss = history.history['val_loss']
-    x = range(1, len(acc) + 1)
+        acc = history.history['accuracy']
+        val_acc = history.history['val_accuracy']
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        x = range(1, len(acc) + 1)
 
-    plt.figure(figsize=(12, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(x, acc, 'b', label='Training acc')
-    plt.plot(x, val_acc, 'r', label='Validation acc')
-    plt.title('Training and validation accuracy')
-    plt.legend()
-    plt.subplot(1, 2, 2)
-    plt.plot(x, loss, 'b', label='Training loss')
-    plt.plot(x, val_loss, 'r', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.legend()
+        plt.figure(figsize=(12, 5))
+        plt.subplot(1, 2, 1)
+        plt.plot(x, acc, 'b', label='Training acc')
+        plt.plot(x, val_acc, 'r', label='Validation acc')
+        plt.title('Training and validation accuracy')
+        plt.legend()
+        plt.subplot(1, 2, 2)
+        plt.plot(x, loss, 'b', label='Training loss')
+        plt.plot(x, val_loss, 'r', label='Validation loss')
+        plt.title('Training and validation loss')
+        plt.legend()
 
 #Función que devuelve los conjuntos de datos vectorizados (CountVectorizer)
 def vectorized_set(only_vectorizer=False):
@@ -123,28 +166,29 @@ def vectorized_set(only_vectorizer=False):
                 return vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
 
 #Función que devuelve los conjuntos de datos tokenizados (para Embedding)
-def data_preset(train = False, descarga=False):
-    sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga)
-    ses_test+=1
-    ses_train+=1
+def data_preset(train = False, augment= False, descarga=False):
+        sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga, augment = augment)
 
-    tokenizer = Tokenizer(num_words=5000)
-    tokenizer.fit_on_texts(sentences_grav_train)
+        ses_test+=1
+        ses_train+=1
 
-    tokenizer2 = Tokenizer(num_words=5000)
-    tokenizer2.fit_on_texts(sentences_ses_train)
+        tokenizer = Tokenizer(num_words=5000)
+        tokenizer.fit_on_texts(sentences_grav_train)
 
-    if train:
-        X_grav_train = tokenizer.texts_to_sequences(sentences_grav_train)
-        X_grav_test  = tokenizer.texts_to_sequences(sentences_grav_test)
+        tokenizer2 = Tokenizer(num_words=5000)
+        tokenizer2.fit_on_texts(sentences_ses_train)
 
-        X_ses_train = tokenizer2.texts_to_sequences(sentences_ses_train)
-        X_ses_test = tokenizer2.texts_to_sequences(sentences_ses_test)
+        if train:
+                X_grav_train = tokenizer.texts_to_sequences(sentences_grav_train)
+                X_grav_test  = tokenizer.texts_to_sequences(sentences_grav_test)
 
-        return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
+                X_ses_train = tokenizer2.texts_to_sequences(sentences_ses_train)
+                X_ses_test = tokenizer2.texts_to_sequences(sentences_ses_test)
 
-    else:
-        return tokenizer, tokenizer2 
+                return tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
+
+        else:
+                return tokenizer, tokenizer2 
 
 def pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen):
         X_grav_train = pad_sequences(X_grav_train, padding='post', maxlen=maxlen)
@@ -168,3 +212,7 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
                 embedding_matrix[idx] = np.array(vector, dtype=np.float32)[:embedding_dim]
 
     return embedding_matrix
+
+
+if __name__=='__main__':
+        sets(augment=True)

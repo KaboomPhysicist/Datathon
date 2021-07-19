@@ -25,6 +25,24 @@ def augmen(df):
     
     return df_a
 
+def augmen_array(arr, val_arr, val_arr2):
+    aug = synonym.SynonymAug(aug_src='wordnet',lang='spa')
+
+    aug_arr=array([])
+    score=array([])
+
+    for pos, val in enumerate(val_arr):
+        if aug.augment(arr[pos])!=arr[pos]:
+            aug_arr=append(aug_arr,aug.augment(arr[pos]))
+            score=append(score,val)
+        else:
+            aug_arr=append(aug_arr,'')
+            score=append(score,NaN)
+
+    df = pd.DataFrame({"Item (Texto)": aug_arr,"Gravedad" : score,"Sesgo" : val_arr2})
+    df.to_csv('../data/clasificacion_augmented.csv')
+
+
 def main():
     df = pd.read_csv(CSV_Path, header = 0)
     df['GravedadMode'] = df['Gravedad'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
@@ -33,7 +51,7 @@ def main():
     
     df2 = pd.concat([df, augmen(df)], ignore_index=True, sort=False)
     df2.to_csv(f'nlpaug_data.csv')
-    #sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
+   # sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
     #plt.show()
     
 if __name__ == '__main__':
