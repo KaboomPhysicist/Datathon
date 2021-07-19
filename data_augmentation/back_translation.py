@@ -30,7 +30,7 @@ def translate(df, LANG, OLANG):
     
     return df_en
     
-def maind():
+def main():
     df = pd.read_csv(CSV_Path, header = 0)
     x = df['Item (Texto)'].values
     y = df['GravedadMode'].values
@@ -47,4 +47,4 @@ def maind():
     df3.to_csv(f'Test-{API}-{LANG}.csv')
     
 if __name__ == '__main__':
-    maind()
+    main()
