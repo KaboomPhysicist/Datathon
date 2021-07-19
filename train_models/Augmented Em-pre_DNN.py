@@ -7,11 +7,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from drive.quickstart_drive import data_download
 
-data_download()
+#data_download()
 
 from data_augmentation.back_translation import maind
 
 from data_augmentation.synaug import main
+
+print('Data downloaded')
 
 import nltk
 nltk.download('averaged_perceptron_tagger')
@@ -19,9 +21,9 @@ nltk.download('wordnet')
 nltk.download('omw')
 
 main()
-
+print('nlpaug done')
 maind()
-
+print('back_translation done')
 CSV_Path1 ="../data_augmentation/Train-google-en.csv"
 CSV_Path2 ="../data_augmentation/Test-google-en.csv"
 
