@@ -7,7 +7,7 @@ from nlpaug.augmenter.word import synonym
 #This script implements Synonym Augmenter, only to the rows with GravedadMode value equal to 0, the result is the augmented dataframe 
 #This is meant to be used before the final augmentation
 
-CSV_Path ="../data/DataSet (Augmentation.test).csv"
+CSV_Path ="../data/clasificacion.csv"
 
 def augmen(df):
     augmentation = {}
@@ -33,8 +33,8 @@ def main():
     
     df2 = pd.concat([df, augmen(df)], ignore_index=True, sort=False)
     df2.to_csv(f'nlpaug_data.csv')
-    sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
-    plt.show()
+    #sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
+    #plt.show()
     
 if __name__ == '__main__':
     main()
