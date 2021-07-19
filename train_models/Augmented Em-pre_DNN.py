@@ -29,7 +29,6 @@ df_concat = pd.read_csv(CSV_Path1, header = 0)
 df3 = pd.read_csv(CSV_Path2, header = 0)
 
 from tensorflow import keras
-%tensorflow_version 2.x
 
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.text import Tokenizer
