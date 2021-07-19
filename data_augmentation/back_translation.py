@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from BackTranslation import BackTranslation
 from time import sleep
@@ -30,6 +31,38 @@ def translate(df, LANG, OLANG):
     
     return df_en
     
+def translate_array(arr, val_arr1, val_arr2, LANG, OLANG):
+    translations = np.array([])
+    scores = np.array([])
+    scores2 = np.array([])
+    trans = BackTranslation()
+
+    for pos, sentence in enumerate(arr):
+        sleep(1)
+        buf = trans.translate(sentence, src=OLANG, tmp = LANG).result_text
+        try:
+            buffer = trans.translate(sentence, src=OLANG, tmp = LANG).result_text
+            if buffer!=sentence:
+                translations =  np.append(translations,buffer)
+                scores = np.append(scores, val_arr1[pos])
+                scores2 = np.append(scores2, val_arr2[pos])
+            else:
+                print("Oración igual después de traducción")
+                translations =  np.append(translations,'')
+                scores = np.append(scores, np.NaN)
+                scores2 = np.append(scores, np.NaN)
+        except TypeError:
+            print("ERROR: Traducción")
+            print(sentence)
+
+            translations =  np.append(translations,'')
+            scores = np.append(scores, np.NaN)
+            scores2 = np.append(scores, np.NaN)
+
+    df = pd.DataFrame({"Item (Texto)" :translations,"Gravedad" : scores, "sesgo" : scores2})
+    df.to_csv('../data/clasificacion_backtranslate.csv')
+
+
 def main():
     df = pd.read_csv(CSV_Path, header = 0)
     x = df['Item (Texto)'].values
