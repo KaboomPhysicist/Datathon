@@ -159,7 +159,7 @@ model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbac
 plt.style.use('ggplot')
 
 
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 keras.backend.clear_session()
 mod = create_model(neurons=60, momentum=0.9)
@@ -223,6 +223,5 @@ print("Testing Accuracy:  {:.4f}".format(accuracy))
 
 
 #comentario = pad_sequences(comentario, padding = 'pre',maxlen=max(news_num1, news_num2))
-
 
 #np.argmax(mod.predict(comentario), axis=-1)
