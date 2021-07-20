@@ -1,21 +1,32 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from model_train.extract_split_data import plot_history
+
 from drive.quickstart_drive import data_download
-
-#data_download()
-
 from data_augmentation.back_translation import maind
-
 from data_augmentation.synaug import main
 
-print('Data downloaded')
-
 import nltk
+
+from tensorflow import keras
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Flatten, Conv1D
+from tensorflow.keras.layers import Dropout, GlobalMaxPool1D
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras.layers import Embedding
+#data_download()
+
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 nltk.download('omw')
@@ -29,11 +40,6 @@ CSV_Path2 ="../data_augmentation/Test-google-en.csv"
 
 df_concat = pd.read_csv(CSV_Path1, header = 0)
 df3 = pd.read_csv(CSV_Path2, header = 0)
-
-from tensorflow import keras
-
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.preprocessing.text import Tokenizer
 
 X_train = df_concat['Item (Texto)'].values
 y_train = df_concat['GravedadMode'].values
@@ -50,8 +56,6 @@ vocab_size = len(t.word_index) + 1
 sequences1 = t.texts_to_sequences(X_train)
 sequences2 = t.texts_to_sequences(X_test)
 
-import numpy as np
-
 def max_news(seq):
     for i in range(1, len(seq)):
         max_length = len(seq[0])
@@ -62,8 +66,6 @@ def max_news(seq):
 news_num1 = max_news(seq = sequences1)
 
 news_num2 = max_news(seq = sequences2)
-
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 padded_x_train = pad_sequences(sequences1, padding='pre', maxlen=max(news_num1, news_num2))
 padded_x_test = pad_sequences(sequences2, padding='pre', maxlen=max(news_num1, news_num2))
@@ -90,11 +92,6 @@ for line in f:
 f.close()
 print('Loaded %s word vectors.' % len(embeddings_index))
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Flatten, Conv1D
-from tensorflow.keras.layers import Dropout, GlobalMaxPool1D
-from keras.callbacks import EarlyStopping
 
 # Definición del tamaño de la matriz embedding: Número de palabas únicas x dimensión del embedding (100)
 embedding_matrix = np.zeros((vocab_size, 300))
@@ -109,13 +106,11 @@ for word, i in t.word_index.items():  # diccionario
 keras.backend.clear_session()
 
 # Creación de la capa embedding esando la matriz embedding predefinida.
-from tensorflow.keras.layers import Embedding
 
 # la entrada será vocab_size, y la salida 300
 # para cargar los pesos de la matriz embedding hacemos trainable = False
 embedding_layer = Embedding(input_dim=vocab_size, output_dim=300, weights=[embedding_matrix],input_length = max(news_num1, news_num2), trainable=True)
 
-from keras.wrappers.scikit_learn import KerasClassifier
 es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
 
 def create_model(neurons=20, momentum=0.9):
@@ -161,27 +156,7 @@ model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbac
 #for mean, stdev, param in zip(means, stds, params):
 #    print("%f (%f) with: %r" % (mean, stdev, param))
 
-#import matplotlib.pyplot as plt
 plt.style.use('ggplot')
-
-def plot_history(history):
-    acc = history.history['acc']
-    val_acc = history.history['val_acc']
-    loss = history.history['loss']
-    val_loss = history.history['val_loss']
-    x = range(1, len(acc) + 1)
-
-    plt.figure(figsize=(12, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(x, acc, 'b', label='Training acc')
-    plt.plot(x, val_acc, 'r', label='Validation acc')
-    plt.title('Training and validation accuracy')
-    plt.legend()
-    plt.subplot(1, 2, 2)
-    plt.plot(x, loss, 'b', label='Training loss')
-    plt.plot(x, val_loss, 'r', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.legend()
 
 
 from keras.callbacks import ModelCheckpoint
