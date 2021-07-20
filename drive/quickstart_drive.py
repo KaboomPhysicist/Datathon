@@ -11,10 +11,14 @@ def data_download():
     drive = GoogleDrive(gauth)
 
     #Ubica el spreadsheet con su ID y lo descarga
-    data_file = drive.CreateFile({'id' : '1ERFL1EeV4aL7xyGFc-zzFYSnEb6fpHx79P3IQhOLSXo'})
-    data_file.GetContentFile('../data/IdentificacionSesgo.xlsx',
-                            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    
-    #Lee el spreadsheet con pandas y lo convierte a CSV
-    file = pd.read_excel('../data/IdentificacionSesgo.xlsx', sheet_name='DataSet', engine='openpyxl')
-    file.to_csv('../data/clasificacion.csv',index=None, header=True)
+    try:
+        data_file = drive.CreateFile({'id' : '1ERFL1EeV4aL7xyGFc-zzFYSnEb6fpHx79P3IQhOLSXo'})
+        data_file.GetContentFile('../data/IdentificacionSesgo.xlsx',
+                                mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+        #Lee el spreadsheet con pandas y lo convierte a CSV
+        file = pd.read_excel('../data/IdentificacionSesgo.xlsx', sheet_name='DataSet', engine='openpyxl')
+        file.to_csv('../data/clasificacion.csv',index=None, header=True)
+        print("Data downloaded in /data/clasificacion.csv")
+    except:
+        print("Download Error. Try erasing the old file.")
