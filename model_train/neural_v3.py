@@ -140,4 +140,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-    train_neural_basic_preembedding(False, augment=False)
+    train_neural_basic_preembedding(False, augment=True)
