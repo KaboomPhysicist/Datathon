@@ -107,13 +107,17 @@ def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, up
                                 pos_grav.append(pos[0][0])
 
                                 if grav_train[position]==0:
-                                        aug_grav.append(aug_sentences[position])
-                                        grav_train = np.append(grav_train,0)
+                                        if len(str(aug_sentences[position]))>7:
+                                                aug_grav.append(aug_sentences[position])
+                                                grav_train = np.append(grav_train,0)
 
                                 grav_train = np.append(grav_train, grav_moda[pos[0][0]])
                                 aug_grav.append(*trans_sentences[pos])
                                 
-                        sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None)
+                        sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None,)
+                        
+                        for i in range(len(sentences_grav_train)):
+                                print(sentences_grav_train[i],grav_train[i],"\n")
 
                         for position, sentence in enumerate(sentences_ses_train):
                                 pos = np.where(np.array(sentences)==sentence)
