@@ -1,4 +1,3 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,17 +18,18 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Flatten, Conv1D
-from tensorflow.keras.layers import Dropout, GlobalMaxPool1D
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import Dense, Flatten, Conv1D, Dropout, GlobalMaxPool1D, Embedding
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
-from tensorflow.keras.layers import Embedding
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import confusion_matrix, precision_score, recall_score
+
 #data_download()
 
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-nltk.download('omw')
+#nltk.download('averaged_perceptron_tagger')
+#nltk.download('wordnet')
+#nltk.download('omw')
 
 main()
 print('nlpaug done')
@@ -106,7 +106,6 @@ for word, i in t.word_index.items():  # diccionario
 keras.backend.clear_session()
 
 # Creación de la capa embedding esando la matriz embedding predefinida.
-
 # la entrada será vocab_size, y la salida 300
 # para cargar los pesos de la matriz embedding hacemos trainable = False
 embedding_layer = Embedding(input_dim=vocab_size, output_dim=300, weights=[embedding_matrix],input_length = max(news_num1, news_num2), trainable=True)
@@ -138,13 +137,9 @@ def create_model(neurons=20, momentum=0.9):
 
 model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbacks=[es])
 
-
-
 #momentum = [0.1, 0.3, 0.5, 0.7, 0.9, 1]
 #param_grid = dict(momentum = momentum )
 
-
-#from sklearn.model_selection import GridSearchCV
 #grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
 #grid_result = grid.fit(X_train, y_train,validation_data=(X_test, y_test))
 
@@ -157,9 +152,6 @@ model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbac
 #    print("%f (%f) with: %r" % (mean, stdev, param))
 
 plt.style.use('ggplot')
-
-
-from tensorflow.keras.callbacks import ModelCheckpoint
 
 keras.backend.clear_session()
 mod = create_model(neurons=60, momentum=0.9)
@@ -189,11 +181,7 @@ print("Testing Accuracy:  {:.4f}".format(accuracy))
 #y_true = np.concatenate((y_train, y_test), axis=0)
 #X_true = np.concatenate((X_train, X_test), axis=0)
 
-
-#from sklearn.metrics import confusion_matrix
-
 #y_pred = mod.predict(X_true)
-
 #y_pred = np.round(y_pred)
 
 #true = np.zeros(len(y_true))
@@ -211,10 +199,7 @@ print("Testing Accuracy:  {:.4f}".format(accuracy))
 
 #cm(true, pred)
 
-#from sklearn.metrics import precision_score
 #precision_score(true,pred, average='micro')
-
-#from sklearn.metrics import recall_score
 #recall_score(true,pred, average='macro')
 
 #comentario = ['El presidente en alocución oficial pronunció un discurso de odio y terror para toda la población, incitando al asesinato de todo aquel de la oposición y declarando que la única postura válida en el país era la ultraderecha.']
