@@ -2,7 +2,7 @@ from numpy import *
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from nlpaug.augmenter.word import synonym
+import nlpaug.augmenter.word as naw
 
 
 #This script implements Synonym Augmenter, only to the rows with GravedadMode value equal to 0, the result is the augmented dataframe 
@@ -12,7 +12,7 @@ CSV_Path ="../data/DataSet (Augmentation.test).csv"
 
 def augmen(df):
     augmentation = {}
-    aug = synonym.SynonymAug(aug_src='wordnet', lang='spa')
+    aug = naw.SynonymAug(aug_src='wordnet', lang='spa')
     
     df_a = df.copy()
     df_a = df_a.drop(df_a[(df_a['GravedadMode']=='2')].index)
@@ -27,7 +27,7 @@ def augmen(df):
     return df_a
 
 def augmen_array(arr, val_arr, val_arr2):
-    aug = synonym.SynonymAug(aug_src='wordnet',lang='spa')
+    aug = naw.SynonymAug(aug_src='wordnet',lang='spa')
 
     aug_arr=array([])
     score=array([])
