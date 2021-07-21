@@ -4,3 +4,4 @@
 *.pyc
 setup.sh
 libs.sh
+drive/__pycache__
