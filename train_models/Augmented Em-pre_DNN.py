@@ -31,8 +31,8 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score
 #nltk.download('wordnet')
 #nltk.download('omw')
 
-main()
-print('nlpaug done')
+#main()
+#print('nlpaug done')
 maind()
 print('back_translation done')
 CSV_Path1 ="../data_augmentation/Train-google-en.csv"
@@ -75,10 +75,17 @@ labels_test = to_categorical(np.asarray(y_test))
 
 X_train, X_test, y_train, y_test = padded_x_train, padded_x_test, labels_train, labels_test
 
+X_val = X_test[-int(y_test.shape[0]/2):]
+y_val = y_test[-int(y_test.shape[0]/2):]
+X_test = X_test[:-int(y_test.shape[0]/2)]
+y_test = y_test[:-int(y_test.shape[0]/2)]
+
 print('X_train size:', X_train.shape)
 print('y_train size:', y_train.shape)
 print('X_test size:', X_test.shape)
 print('y_test size:', y_test.shape)
+print('X_val size:', X_val.shape)
+print('y_val size:', y_val.shape)
 
 embedding = '../embeddings/embeddings-l-model.vec'
 
@@ -162,7 +169,7 @@ mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_acc'
 history = mod.fit(X_train, y_train,
                             batch_size=256,
                             epochs=700,
-                            validation_data=(X_test, y_test),
+                            validation_data=(X_val, y_val),
                             callbacks=[es,mcp_save])
 loss, accuracy = mod.evaluate(X_train, y_train, verbose=False)
 print("Training Accuracy: {:.4f}".format(accuracy))

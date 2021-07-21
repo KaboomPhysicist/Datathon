@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from nlpaug.augmenter.word import synonym
 
+
 #This script implements Synonym Augmenter, only to the rows with GravedadMode value equal to 0, the result is the augmented dataframe 
 #This is meant to be used before the final augmentation
 

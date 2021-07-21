@@ -65,6 +65,7 @@ def translate_array(arr, val_arr1, val_arr2, LANG, OLANG):
 
 def maind():
     df = pd.read_csv(CSV_Path, header = 0)
+
     x = df['Item (Texto)'].values
     y = df['GravedadMode'].values
     
