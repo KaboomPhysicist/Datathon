@@ -124,8 +124,8 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
     
-    model.summary()
-    model2.summary()
+   # model.summary()
+   # model2.summary()
 
     clear_session()
 
@@ -181,4 +181,5 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-    train_neural_basic_preembedding(False, augment=False)
+    for i in range(25):
+        train_neural_basic_preembedding(False, augment=False)
