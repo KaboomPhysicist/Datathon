@@ -23,7 +23,7 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
     
     #Declaración del modelo para gravedad
     model = KerasClassifier(build_fn = n3.create_model, epochs = epochs,
-                            batch_size = 64, verbose=True)
+                            batch_size = 256, verbose=True)
 
     #Elección del método para buscar los hiperparámetros
     if type == 'random':
@@ -79,4 +79,4 @@ def hyperoptimization(epochs, param_grid, type = 'random'):
 
 if __name__=='__main__':
     #'../embeddings/embeddings-l-model.vec','../embeddings/fasttext-sbwc.vec','../embeddings/SBW-vectors-300-min5.txt','../embeddings/glove-sbwc.i25.vec'
-    hyperoptimization(150, dict(embedding_path = ['../embeddings/cbow.vec'],embedding_dim = [200,300,400]),type='random')
+    hyperoptimization(500, dict(embedding_path = ['../embeddings/cbow.vec'],embedding_dim = [200,300,400]),type='random')
