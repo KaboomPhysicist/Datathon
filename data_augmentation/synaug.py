@@ -51,7 +51,7 @@ def main():
     df = df[['Item (Texto)', 'GravedadMode', 'SesgoMode']]
     
     df2 = pd.concat([df, augmen(df)], ignore_index=True, sort=False)
-    df2.to_csv(f'nlpaug_data.csv')
+    df2.to_csv(f'../data_augmentation/nlpaug_data.csv')
    # sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
     #plt.show()
     

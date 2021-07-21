@@ -31,8 +31,8 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score
 #nltk.download('wordnet')
 #nltk.download('omw')
 
-#main()
-#print('nlpaug done')
+main()
+print('nlpaug done')
 maind()
 print('back_translation done')
 CSV_Path1 ="../data_augmentation/Train-google-en.csv"
