@@ -35,8 +35,8 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score
 #print('nlpaug done')
 #maind()
 #print('back_translation done')
-CSV_Path1 ="../data_augmentation/Train-google-en.csv"
-CSV_Path2 ="../data_augmentation/Test-google-en.csv"
+CSV_Path1 ="../data_augmentation/Train-google-en_grav.csv"
+CSV_Path2 ="../data_augmentation/Test-google-en_grav.csv"
 
 df_concat = pd.read_csv(CSV_Path1, header = 0)
 df3 = pd.read_csv(CSV_Path2, header = 0)
