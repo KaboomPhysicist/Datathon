@@ -5,3 +5,4 @@
 setup.sh
 libs.sh
 /drive/__pycache__
+*.swp

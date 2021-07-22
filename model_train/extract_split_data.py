@@ -116,8 +116,8 @@ def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, up
                                 
                         sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None,)
                         
-                        for i in range(len(sentences_grav_train)):
-                                print(sentences_grav_train[i],grav_train[i],"\n")
+#                        for i in range(len(sentences_grav_train)):
+#                                print(sentences_grav_train[i],grav_train[i],"\n")
 
                         for position, sentence in enumerate(sentences_ses_train):
                                 pos = np.where(np.array(sentences)==sentence)
