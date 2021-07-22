@@ -18,7 +18,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Conv1D, Dropout, GlobalMaxPool1D, Embedding
+from tensorflow.keras.layers import Dense, Flatten, Conv1D, Dropout, GlobalMaxPool1D, Embedding, BatchNormalization
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 
@@ -99,8 +99,6 @@ for line in f:
 f.close()
 print('Loaded %s word vectors.' % len(embeddings_index))
 
-
-# Definición del tamaño de la matriz embedding: Número de palabas únicas x dimensión del embedding (100)
 embedding_matrix = np.zeros((vocab_size, 300))
 
 # relleno de la matriz
@@ -122,12 +120,15 @@ es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
 def create_model(neurons=20, momentum=0.9):
   mod = Sequential()
   mod.add(embedding_layer)
-  mod.add(Conv1D(128, 5, activation='relu'))
+  mod.add(Conv1D(450, 4, activation='relu'))
   mod.add(GlobalMaxPool1D())
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
   mod.add(Dropout(0.2))
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
   mod.add(Dropout(0.2))
+  mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
+  mod.add(Dropout(0.2))
+  mod.add(BatchNormalization())
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
   mod.add(Dropout(0.2))
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
@@ -183,6 +184,7 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
+mod.save('prueba_gravedad.h5')
 #y_true = np.concatenate((y_train, y_test), axis=0)
 #X_true = np.concatenate((X_train, X_test), axis=0)
 
