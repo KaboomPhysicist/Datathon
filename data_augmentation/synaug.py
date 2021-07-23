@@ -10,14 +10,18 @@ import nlpaug.augmenter.word as naw
 
 CSV_Path ="../data/DataSet (Augmentation.test).csv"
 
-def augmen(df):
+def augmen(df, grav):
     augmentation = {}
     aug = naw.SynonymAug(aug_src='wordnet', lang='spa')
     
     df_a = df.copy()
-    df_a = df_a.drop(df_a[(df_a['GravedadMode']=='2')].index)
-    df_a = df_a.drop(df_a[(df_a['GravedadMode']=='1')].index)
-    df_a = df_a.drop(df_a[(df_a['GravedadMode']=='3')].index)
+    if grav:
+        df_a = df_a.drop(df_a[(df_a['GravedadMode']=='2')].index)
+        df_a = df_a.drop(df_a[(df_a['GravedadMode']=='1')].index)
+        df_a = df_a.drop(df_a[(df_a['GravedadMode']=='3')].index)
+    else:
+        df_a = df_a.drop(df_a[(df_a['SesgoMode']=='0')].index)
+        df_a = df_a.drop(df_a[(df_a['SesgoMode']=='1')].index)
 
     for element in df_a['Item (Texto)'].unique():
         augmentation[element] =  aug.augment(element)
@@ -44,14 +48,17 @@ def augmen_array(arr, val_arr, val_arr2):
     df.to_csv('../data/clasificacion_augmented.csv')
 
 
-def main():
+def main(grav = True):
     df = pd.read_csv(CSV_Path, header = 0)
     df['GravedadMode'] = df['Gravedad'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
     df['SesgoMode'] = df['Sesgo'].str.split(',',expand=True).mode(axis=1, numeric_only=False, dropna=True)[0]
     df = df[['Item (Texto)', 'GravedadMode', 'SesgoMode']]
     
-    df2 = pd.concat([df, augmen(df)], ignore_index=True, sort=False)
-    df2.to_csv(f'../data_augmentation/nlpaug_data_grav.csv')
+    df2 = pd.concat([df, augmen(df, grav)], ignore_index=True, sort=False)
+    if grav:
+        df2.to_csv(f'../data_augmentation/nlpaug_data_grav.csv')
+    else:
+        df2.to_csv(f'../data_augmentation/nlpaug_data_ses.csv')
    # sns.catplot(data = df2, x = 'GravedadMode', kind = 'count')
     #plt.show()
     
