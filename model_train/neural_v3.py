@@ -120,7 +120,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     
     embedding_dim = 300
 
-    model = create_model3(tokenizer, embedding_dim, embedding_path, maxlen, neurons=60, momentum = 0.9)
+    model = create_model(tokenizer, embedding_dim, embedding_path, maxlen)
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
     
@@ -136,14 +136,15 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
                     epochs=700,
                     verbose=False,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=256,
+                    batch_size=20,
                     callbacks=[es])
 
     history2 = model2.fit(X_ses_train, ses_train,
-                    epochs=100,
+                    epochs=700,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    batch_size=256)
+                    callbacks=[es],
+                    batch_size=20)
         
 
     loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
@@ -181,5 +182,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-    for i in range(25):
-        train_neural_basic_preembedding(False, augment=False)
+    train_neural_basic_preembedding(True, augment=False)
