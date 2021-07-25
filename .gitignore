@@ -1,8 +1,8 @@
 /embeddings
 /.vscode
-/__pycache__
+__pycache__/
 *.pyc
 setup.sh
 libs.sh
-/drive/__pycache__
+drive/__pycache__
 *.swp
