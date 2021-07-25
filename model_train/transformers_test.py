@@ -1,9 +1,11 @@
 from matplotlib import pyplot as plt
+
 from extract_split_data import create_embedding_matrix, data_preset, pad, plot_history
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-
+from tensorflow.keras.callbacks import EarlyStopping
 class TransformerBlock(layers.Layer):
     def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1):
         super(TransformerBlock, self).__init__()
@@ -84,9 +86,13 @@ model = keras.Model(inputs=inputs, outputs=outputs)
 model.compile("adam", "sparse_categorical_crossentropy", metrics=["accuracy"])
 model.summary()
 
-history = model.fit(
-    X_grav_train, grav_train, batch_size=32, epochs=500, validation_data=(X_grav_test, grav_test)
-)
+es=EarlyStopping(monitor='val_loss',patience=50, restore_best_weights=True)
+
+history = model.fit(X_grav_train, grav_train,
+                    batch_size=128,
+                    epochs=500,
+                    validation_data=(X_grav_test, grav_test),
+                    callbacks=[es])
 
 loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
 print("Precisión de entrenamiento (Gravedad): {:.4f}".format(accuracy))
