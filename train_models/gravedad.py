@@ -142,6 +142,7 @@ def create_model(neurons=20, momentum=0.9):
   return mod
 
 model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbacks=[es])
+model.summary()
 
 #momentum = [0.1, 0.3, 0.5, 0.7, 0.9, 1]
 #param_grid = dict(momentum = momentum )
