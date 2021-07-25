@@ -6,3 +6,4 @@ setup.sh
 libs.sh
 drive/__pycache__
 *.swp
+drive/__pycache__/quickstart_drive.cpython-38.pyc
