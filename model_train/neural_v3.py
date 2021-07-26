@@ -133,17 +133,15 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_acc', mode='max')
 
     history = model.fit(X_grav_train, grav_train,
-                    epochs=700,
+                    epochs=500,
                     verbose=False,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=20,
-                    callbacks=[es])
+                    batch_size=20)
 
     history2 = model2.fit(X_ses_train, ses_train,
-                    epochs=700,
+                    epochs=500,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    callbacks=[es],
                     batch_size=20)
         
 
