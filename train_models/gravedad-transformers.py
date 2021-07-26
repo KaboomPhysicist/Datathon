@@ -130,7 +130,7 @@ for word, i in t.word_index.items():  # diccionario
 # la entrada será vocab_size, y la salida 300
 # para cargar los pesos de la matriz embedding hacemos trainable = False
 embedding_layer = Embedding(input_dim=vocab_size, output_dim=300, weights=[embedding_matrix],input_length = max(news_num1, news_num2), trainable=True)
-transformer_layer = TransformerBlock(embed_dim=300, num_heads=3, ff_dim=20)
+transformer_layer = TransformerBlock(embed_dim=300, num_heads=3, ff_dim=60)
 
 def create_model(neurons=20, momentum=0.9):
   mod = Sequential()
@@ -162,7 +162,7 @@ def create_model(neurons=20, momentum=0.9):
 
 keras.backend.clear_session()
 
-es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
+es=EarlyStopping(monitor='val_loss',patience=100, restore_best_weights=True)
 
 model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbacks=[es])
 
@@ -190,15 +190,16 @@ es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
 mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_accuracy', mode='max')
 
 history = mod.fit(X_train, y_train,
-                            batch_size=256,
-                            epochs=700,
+                            batch_size=64,
+                            epochs=2000,
                             validation_data=(X_val, y_val),
-                            callbacks=[es,mcp_save])
+                            callbacks=[mcp_save])
 loss, accuracy = mod.evaluate(X_train, y_train, verbose=False)
 print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 plot_history(history)
+plt.show()
 
 mod.load_weights('./checkpoint')
 
@@ -208,7 +209,7 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
-mod.save('prueba_gravedad.h5')
+#mod.save('prueba_gravedad-transformers.h5')
 #y_true = np.concatenate((y_train, y_test), axis=0)
 #X_true = np.concatenate((X_train, X_test), axis=0)
 
