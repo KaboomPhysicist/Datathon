@@ -73,16 +73,16 @@ def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, up
         else:
                 if tipo=='moda':
                         sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
-                                np.array(sentences), np.array(grav_moda), test_size=0.25, random_state=1000)
+                                np.array(sentences), np.array(grav_moda), test_size=0.25)
 
                         sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo_moda), test_size=0.25, random_state=1000)
+                                np.array(sentences), np.array(sesgo_moda), test_size=0.25)
                 else:
                         sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
-                                np.array(sentences), np.array(grav), test_size=0.25, random_state=1000)
+                                np.array(sentences), np.array(grav), test_size=0.25)
 
                         sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo), test_size=0.25, random_state=1000)            
+                                np.array(sentences), np.array(sesgo), test_size=0.25)            
                 
                 if augment:
                         if update:
