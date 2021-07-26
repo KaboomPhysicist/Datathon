@@ -30,13 +30,12 @@ class TransformerBlock(layers.Layer):
         return self.layernorm2(out1 + ffn_output)
 
 
-def transformer_model(tokenizer, neurons = 60, embedding_path = '../embeddings/embeddings-l-model.vec'):
+def transformer_model(tokenizer, maxlen, neurons = 60, embedding_path = '../embeddings/embeddings-l-model.vec'):
     
     vocab_size = 5000  # Only consider the top 5k words
-    maxlen = 300  # Only consider the first 200 words of each movie review
 
     embed_dim = 300  # Embedding size for each token
-    num_heads = 10  # Number of attention heads
+    num_heads = 3  # Number of attention heads
     ff_dim = 40 # Hidden layer size in feed forward network inside transformer
 
     vocab_size = len(tokenizer.word_index) + 1
@@ -70,7 +69,7 @@ def transformer_model(tokenizer, neurons = 60, embedding_path = '../embeddings/e
 
     return model
 
-maxlen = 200
+maxlen = 300
 
 tokenizer, tokenizer2, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test = data_preset(train=True, augment=False)
 X_grav_train, X_grav_test, X_ses_train, X_ses_test = pad(X_grav_train, X_grav_test, X_ses_train, X_ses_test, maxlen)
@@ -80,13 +79,13 @@ es=EarlyStopping(monitor='val_loss', patience=50, restore_best_weights=True)
 
 clear_session()
 
-model = transformer_model(neurons = i, tokenizer = tokenizer)
+model = transformer_model(neurons = 40, tokenizer = tokenizer, maxlen = maxlen)
 history = model.fit(X_grav_train, grav_train,
-                    batch_size=128,
-                    epochs=1000,
+                    batch_size=32,
+                    epochs=2000,
                     validation_data=(X_grav_test, grav_test),
                     callbacks=[es],
-                    verbose = False)
+                    verbose = True)
 
 loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
 print("Precision de entrenamiento (Gravedad): {:.4f}".format(accuracy))
