@@ -108,7 +108,7 @@ print('y_val size:', y_val.shape)
 embedding = '../embeddings/embeddings-l-model.vec'
 
 embeddings_index = dict()
-f = open(embedding)
+f = open(embedding,encoding='utf8')
 for line in f:
     values = line.split()
     word = values[0]
@@ -152,7 +152,7 @@ def create_model(neurons=20, momentum=0.9):
   mod.add(Dropout(0.2))
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
   mod.add(Dense(4, activation='softmax'))
-  opt = keras.optimizers.SGD(learning_rate=0.05, momentum=momentum, nesterov=True, clipnorm = 1, clipvalue = 0.5)
+  opt = keras.optimizers.SGD(learning_rate=0.001, momentum=momentum, nesterov=True, clipnorm = 1, clipvalue = 0.5)
   mod.compile(optimizer=opt,
                 loss='categorical_crossentropy',
                 metrics=['accuracy'])
@@ -184,22 +184,22 @@ model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbac
 plt.style.use('ggplot')
 
 keras.backend.clear_session()
-mod = create_model(neurons=40, momentum=0.8)
+mod = create_model(neurons=60, momentum=0.8)
 
 es=EarlyStopping(monitor='val_loss',patience=100, restore_best_weights=True)
-mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_accuracy', mode='max')
+mcp_save = ModelCheckpoint('checkpoint',save_best_only=True, monitor='val_accuracy', mode='max')
 
 history = mod.fit(X_train, y_train,
-                            batch_size=64,
-                            epochs=2000,
+                            batch_size=256,
+                            epochs=4000,
                             validation_data=(X_val, y_val),
                             callbacks=[es,mcp_save])
 loss, accuracy = mod.evaluate(X_train, y_train, verbose=False)
 print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
-plot_history(history)
-plt.show()
+#plot_history(history)
+#plt.show()
 
 mod.load_weights('./checkpoint')
 
