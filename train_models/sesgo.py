@@ -42,17 +42,19 @@ df_concat = pd.read_csv(CSV_Path1, header = 0)
 df3 = pd.read_csv(CSV_Path2, header = 0)
 
 X_train = df_concat['Item (Texto)'].values
-y_train = df_concat['GravedadMode'].values
+y_train = df_concat['SesgoMode'].values
 
 X_test = df3['Item (Texto)'].values
-y_test = df3['GravedadMode'].values
+y_test = df3['SesgoMode'].values
 
-for i in range(len(y_test)):
-    y_test[i] = int(y_test[i]) + 1
-    
-for i in range(len(y_train)):
-    y_train[i] = int(y_train[i]) + 1
-    
+print(y_test)
+
+#for i in range(len(y_test)):
+#	y_test[i] = int(y_test[i]) + 1
+
+#for i in range(len(y_train)):
+#	y_train[i] = int(y_train[i]) + 1
+
 t = Tokenizer()
 t.fit_on_texts(X_train)
 t.fit_on_texts(X_test)
@@ -78,6 +80,8 @@ padded_x_test = pad_sequences(sequences2, padding='pre', maxlen=max(news_num1, n
 
 labels_train = to_categorical(np.asarray(y_train))
 labels_test = to_categorical(np.asarray(y_test))
+
+print(labels_test)
 
 X_train, X_test, y_train, y_test = padded_x_train, padded_x_test, labels_train, labels_test
 
@@ -177,7 +181,7 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 plot_history(history)
-
+plt.show()
 mod.load_weights('./checkpointr')
 
 
@@ -186,28 +190,29 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
-mod.save('prueba_sesgo.h5')
-#y_true = np.concatenate((y_train, y_test), axis=0)
-#X_true = np.concatenate((X_train, X_test), axis=0)
+if accuracy >= 0.7:
+ mod.save('prueba_sesgo.h5')
+y_true = np.concatenate((y_train, y_test), axis=0)
+X_true = np.concatenate((X_train, X_test), axis=0)
 
-#y_pred = mod.predict(X_true)
-#y_pred = np.round(y_pred)
+y_pred = mod.predict(X_true)
+y_pred = np.round(y_pred)
 
-#true = np.zeros(len(y_true))
-#for i in range(len(y_true)):
-#  true[i] = np.argmax(y_true[i])
+true = np.zeros(len(y_true))
+for i in range(len(y_true)):
+  true[i] = np.argmax(y_true[i])
 
-#pred = np.zeros(len(y_pred))
-#for i in range(len(y_pred)):
-#  pred[i] = np.argmax(y_pred[i])
+pred = np.zeros(len(y_pred))
+for i in range(len(y_pred)):
+  pred[i] = np.argmax(y_pred[i])
 
-#from mlxtend.plotting import plot_confusion_matrix
+from mlxtend.plotting import plot_confusion_matrix
 
-#def cm(y_true,y_pred):
-#  return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds')
+def cm(y_true,y_pred):
+  return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds')
 
-#cm(true, pred)
-
+cm(true, pred)
+plt.show()
 #precision_score(true,pred, average='micro')
 #recall_score(true,pred, average='macro')
 
