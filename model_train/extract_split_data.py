@@ -170,8 +170,8 @@ def vectorized_set(only_vectorizer=False):
                 return vectorizer, X_grav_train, X_grav_test, X_ses_train, X_ses_test, grav_train, grav_test, ses_train, ses_test
 
 #Función que devuelve los conjuntos de datos tokenizados (para Embedding)
-def data_preset(train = False, augment= False, descarga=False):
-        sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga, augment = augment)
+def data_preset(train = False, augment= False, descarga=False, update=False):
+        sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test=sets(descarga=descarga, augment = augment, update=update)
 
         ses_test+=1
         ses_train+=1
