@@ -108,7 +108,7 @@ print('y_val size:', y_val.shape)
 embedding = '../embeddings/embeddings-l-model.vec'
 
 embeddings_index = dict()
-f = open(embedding)
+f = open(embedding,encoding='utf8')
 for line in f:
     values = line.split()
     word = values[0]
@@ -130,7 +130,7 @@ for word, i in t.word_index.items():  # diccionario
 # la entrada será vocab_size, y la salida 300
 # para cargar los pesos de la matriz embedding hacemos trainable = False
 embedding_layer = Embedding(input_dim=vocab_size, output_dim=300, weights=[embedding_matrix],input_length = max(news_num1, news_num2), trainable=True)
-transformer_layer = TransformerBlock(embed_dim=300, num_heads=3, ff_dim=20)
+transformer_layer = TransformerBlock(embed_dim=300, num_heads=3, ff_dim=60)
 
 def create_model(neurons=20, momentum=0.9):
   mod = Sequential()
@@ -152,7 +152,7 @@ def create_model(neurons=20, momentum=0.9):
   mod.add(Dropout(0.2))
   mod.add(Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=keras.regularizers.l1(0.005),bias_regularizer='l1'))
   mod.add(Dense(4, activation='softmax'))
-  opt = keras.optimizers.SGD(learning_rate=0.01, momentum=momentum, nesterov=True, clipnorm = 1, clipvalue = 0.5)
+  opt = keras.optimizers.SGD(learning_rate=0.001, momentum=momentum, nesterov=True, clipnorm = 1, clipvalue = 0.5)
   mod.compile(optimizer=opt,
                 loss='categorical_crossentropy',
                 metrics=['accuracy'])
@@ -162,7 +162,7 @@ def create_model(neurons=20, momentum=0.9):
 
 keras.backend.clear_session()
 
-es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
+es=EarlyStopping(monitor='val_loss',patience=100, restore_best_weights=True)
 
 model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbacks=[es])
 
@@ -184,21 +184,22 @@ model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbac
 plt.style.use('ggplot')
 
 keras.backend.clear_session()
-mod = create_model(neurons=60, momentum=0.9)
+mod = create_model(neurons=60, momentum=0.8)
 
-es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
-mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_accuracy', mode='max')
+es=EarlyStopping(monitor='val_loss',patience=100, restore_best_weights=True)
+mcp_save = ModelCheckpoint('checkpoint',save_best_only=True, monitor='val_accuracy', mode='max')
 
 history = mod.fit(X_train, y_train,
                             batch_size=256,
-                            epochs=700,
+                            epochs=4000,
                             validation_data=(X_val, y_val),
                             callbacks=[es,mcp_save])
 loss, accuracy = mod.evaluate(X_train, y_train, verbose=False)
 print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
-plot_history(history)
+#plot_history(history)
+#plt.show()
 
 mod.load_weights('./checkpoint')
 
@@ -208,7 +209,7 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
-mod.save('prueba_gravedad.h5')
+#mod.save('prueba_gravedad-transformers.h5')
 #y_true = np.concatenate((y_train, y_test), axis=0)
 #X_true = np.concatenate((X_train, X_test), axis=0)
 
