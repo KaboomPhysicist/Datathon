@@ -31,6 +31,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
+    model.add(layers.Conv1D(300, 50, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(25, activation='sigmoid'))
     model.add(layers.Dense(4, activation='softmax'))
@@ -39,7 +40,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
                                                         decay_steps=10000,
                                                         decay_rate=0.9)
 
-    opt = optimizers.Adam(learning_rate=lr_schedule, clipnorm = 1, clipvalue = 0.5)
+    opt = optimizers.Adam(learning_rate=0.01, clipnorm = 1, clipvalue = 0.5)
 
     model.compile(optimizer=opt,
                     loss='sparse_categorical_crossentropy',
@@ -136,13 +137,13 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
                     epochs=500,
                     verbose=False,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=20)
+                    batch_size=128)
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    batch_size=20)
+                    batch_size=128)
         
 
     loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
