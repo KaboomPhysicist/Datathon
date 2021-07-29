@@ -172,8 +172,8 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     model.save('../models/neural_v3_grav.h5')
     model2.save('../models/neural_v3_ses.h5')
 
-    with open('tokenizer.pickle','wb') as handle:
-        pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    with open('tokenizer.pickle','wb') as handle1:
+        pickle.dump(tokenizer, handle1, protocol=pickle.HIGHEST_PROTOCOL)
 
     with open('tokenizer2.pickle','wb') as handle:
         pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -200,10 +200,10 @@ def metricas(maxlen):
     model_grav = load_model('../models/neural_v3_grav.h5')
     model_ses = load_model('../models/neural_v3_ses.h5')
 
-    with open('tokenizer.pickle','wb') as handle:
-        tokenizer = pickle.load(handle)
+    with open('tokenizer.pickle','rb') as handle1:
+        tokenizer = pickle.load(handle1)
 
-    with open('tokenizer2.pickle','wb') as handle:
+    with open('tokenizer2.pickle','rb') as handle:
         tokenizer2 = pickle.load(handle)
     
     sentences, grav_true, ses_true = sets(split=False)
@@ -217,15 +217,16 @@ def metricas(maxlen):
     grav_pred = model_grav.predict(data)
     ses_pred = model_ses.predict(data2)
 
-    grav_val = np.round(grav_pred)
-    ses_val= np.round(ses_pred)
-    print(grav_val)
+    grav_val = np.round(grav_pred).argmax(axis=1)
+    ses_val= np.round(ses_pred).argmax(axis=1)
 
+    print(grav_true, grav_val)
+    
     cm(grav_true, grav_val)
-    cm(ses_true, ses_pred)
+    cm(ses_true, ses_val)
 
 
 
 if __name__=="__main__":
-    train_neural_basic_preembedding(True, descarga=False, augment=False)
-    #metricas(300)
+#    train_neural_basic_preembedding(False, descarga=False, augment=False)
+    metricas(300)
