@@ -20,7 +20,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 #Función extractora de datos desde el servidor
-def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, update=False):
+def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, update=False, split=True):
         if descarga:
 	        data_download()
 
@@ -59,76 +59,78 @@ def sets(tipo='moda', descarga=False, join=False, graph=False, augment=False, up
                 plt.show()
 
         #Para devolver los párrafos junto a una tupla bidimensional de gravedad y sesgo
+        if split:
+                if join:
+                        if tipo=='moda':
+                                sentences_train, sentences_test, y_train, y__test = train_test_split(
+                                        np.array(sentences), np.array([(grav_moda[i],sesgo_moda[i]) for i in range(len(grav_moda))]), test_size=0.25, random_state=1000)
+                        else:
+                                sentences_train, sentences_test, y_train, y_test = train_test_split(
+                                        np.array(sentences), np.array([(grav[i],sesgo[i]) for i in range(len(grav_moda))]) , test_size=0.25, random_state=1000)
 
-        if join:
-                if tipo=='moda':
-                        sentences_train, sentences_test, y_train, y__test = train_test_split(
-                                np.array(sentences), np.array([(grav_moda[i],sesgo_moda[i]) for i in range(len(grav_moda))]), test_size=0.25, random_state=1000)
-                else:
-                        sentences_train, sentences_test, y_train, y_test = train_test_split(
-                                np.array(sentences), np.array([(grav[i],sesgo[i]) for i in range(len(grav_moda))]) , test_size=0.25, random_state=1000)
-
-                return sentences_train, sentences_test, y_train, y__test
-        
-        else:
-                if tipo=='moda':
-                        sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
-                                np.array(sentences), np.array(grav_moda), test_size=0.25)
-
-                        sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo_moda), test_size=0.25)
-                else:
-                        sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
-                                np.array(sentences), np.array(grav), test_size=0.25)
-
-                        sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
-                                np.array(sentences), np.array(sesgo), test_size=0.25)            
+                        return sentences_train, sentences_test, y_train, y__test
                 
-                if augment:
-                        if update:
-                                augmen_array(sentences, grav_moda, sesgo_moda)
-                                translate_array(sentences, grav_moda, sesgo_moda,'en','es')
+                else:
+                        if tipo=='moda':
+                                sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
+                                        np.array(sentences), np.array(grav_moda), test_size=0.25)
 
-                        aug_df = pd.read_csv('../data/clasificacion_augmented.csv')
-                        trans_df = pd.read_csv('../data/clasificacion_backtranslate.csv')
+                                sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
+                                        np.array(sentences), np.array(sesgo_moda), test_size=0.25)
+                        else:
+                                sentences_grav_train, sentences_grav_test, grav_train, grav_test = train_test_split(
+                                        np.array(sentences), np.array(grav), test_size=0.25)
 
-                        pos_grav = []
-                        pos_ses = []
-
-                        aug_sentences = aug_df["Item (Texto)"].values
-                        trans_sentences = trans_df["Item (Texto)"].values
-
-                        aug_grav = []
-                        aug_ses = []
-
-
-                        for position, sentence in enumerate(sentences_grav_train):
-                                pos = np.where(np.array(sentences)==sentence)
-                                pos_grav.append(pos[0][0])
-
-                                if grav_train[position]==0:
-                                        if len(str(aug_sentences[position]))>7:
-                                                aug_grav.append(aug_sentences[position])
-                                                grav_train = np.append(grav_train,0)
-
-                                grav_train = np.append(grav_train, grav_moda[pos[0][0]])
-                                aug_grav.append(*trans_sentences[pos])
-                                
-                        sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None,)
+                                sentences_ses_train, sentences_ses_test, ses_train, ses_test = train_test_split(
+                                        np.array(sentences), np.array(sesgo), test_size=0.25)            
                         
-#                        for i in range(len(sentences_grav_train)):
-#                                print(sentences_grav_train[i],grav_train[i],"\n")
+                        if augment:
+                                if update:
+                                        augmen_array(sentences, grav_moda, sesgo_moda)
+                                        translate_array(sentences, grav_moda, sesgo_moda,'en','es')
 
-                        for position, sentence in enumerate(sentences_ses_train):
-                                pos = np.where(np.array(sentences)==sentence)
-                                pos_ses.append(pos[0][0])
+                                aug_df = pd.read_csv('../data/clasificacion_augmented.csv')
+                                trans_df = pd.read_csv('../data/clasificacion_backtranslate.csv')
 
-                                ses_train = np.append(ses_train, sesgo_moda[pos[0][0]])
-                                aug_ses.append(*trans_sentences[pos])
+                                pos_grav = []
+                                pos_ses = []
+
+                                aug_sentences = aug_df["Item (Texto)"].values
+                                trans_sentences = trans_df["Item (Texto)"].values
+
+                                aug_grav = []
+                                aug_ses = []
+
+
+                                for position, sentence in enumerate(sentences_grav_train):
+                                        pos = np.where(np.array(sentences)==sentence)
+                                        pos_grav.append(pos[0][0])
+
+                                        if grav_train[position]==0:
+                                                if len(str(aug_sentences[position]))>7:
+                                                        aug_grav.append(aug_sentences[position])
+                                                        grav_train = np.append(grav_train,0)
+
+                                        grav_train = np.append(grav_train, grav_moda[pos[0][0]])
+                                        aug_grav.append(*trans_sentences[pos])
+                                        
+                                sentences_grav_train=np.concatenate((sentences_grav_train, np.array(aug_grav)),axis=None,)
                                 
-                        sentences_ses_train=np.concatenate((sentences_ses_train, np.array(aug_ses)),axis=None)
+        #                        for i in range(len(sentences_grav_train)):
+        #                                print(sentences_grav_train[i],grav_train[i],"\n")
 
-                return sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test
+                                for position, sentence in enumerate(sentences_ses_train):
+                                        pos = np.where(np.array(sentences)==sentence)
+                                        pos_ses.append(pos[0][0])
+
+                                        ses_train = np.append(ses_train, sesgo_moda[pos[0][0]])
+                                        aug_ses.append(*trans_sentences[pos])
+                                        
+                                sentences_ses_train=np.concatenate((sentences_ses_train, np.array(aug_ses)),axis=None)
+
+                        return sentences_grav_train, sentences_grav_test, grav_train, grav_test, sentences_ses_train, sentences_ses_test, ses_train, ses_test
+        else:
+                return np.array(sentences), np.array(grav_moda), np.array(sesgo_moda)
 
 #Función graficadora de la precisón y el error de los modelos.
 def plot_history(history):
@@ -216,7 +218,3 @@ def create_embedding_matrix(filepath, word_index, embedding_dim):
                 embedding_matrix[idx] = np.array(vector, dtype=np.float32)[:embedding_dim]
 
     return embedding_matrix
-
-
-if __name__=='__main__':
-        sets(augment=True)

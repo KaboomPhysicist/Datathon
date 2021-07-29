@@ -1,9 +1,11 @@
-from extract_split_data import create_embedding_matrix, plot_history, data_preset, pad
+from extract_split_data import sets, create_embedding_matrix, plot_history, data_preset, pad
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 import tensorflow as tf
+
+import pickle
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
@@ -14,6 +16,10 @@ from tensorflow.keras import optimizers
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, recall_score
+from mlxtend.plotting import plot_confusion_matrix
 
 def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
     #Declaración del modelo de Gravedad
@@ -124,7 +130,6 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     model = create_model(tokenizer, embedding_dim, embedding_path, maxlen)
     model2 = create_model2(tokenizer2, embedding_dim, embedding_path, maxlen)
 
-    
    # model.summary()
    # model2.summary()
 
@@ -165,13 +170,19 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     model.save('../models/neural_v3_grav.h5')
     model2.save('../models/neural_v3_ses.h5')
 
+    with open('tokenizer.pickle','wb') as handle:
+        pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    with open('tokenizer2.pickle','wb') as handle:
+        pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 def modelo(pers_test):
     model_grav = load_model('../models/neural_v3_grav.h5')
     model_ses = load_model('../models/neural_v3_ses.h5')
 
     maxlen = 250
 
-    tokenizer, tokenizer2 = data_preset(maxlen)
+    tokenizer, tokenizer2 = data_preset(train = False)
 
     test1 = tokenizer.texts_to_sequences(np.array([pers_test]))
     test2 = tokenizer2.texts_to_sequences(np.array([pers_test]))
@@ -180,5 +191,39 @@ def modelo(pers_test):
 
     print(model_grav.predict(test1),model_ses.predict(test2))
 
+def cm(y_true,y_pred):
+  return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds')
+
+def metricas(maxlen):
+    model_grav = load_model('../models/neural_v3_grav.h5')
+    model_ses = load_model('../models/neural_v3_ses.h5')
+
+    with open('tokenizer.pickle','wb') as handle:
+        tokenizer = pickle.load(handle)
+
+    with open('tokenizer2.pickle','wb') as handle:
+        tokenizer2 = pickle.load(handle)
+    
+    sentences, grav_true, ses_true = sets(split=False)
+
+    data = tokenizer.texts_to_sequences(sentences)
+    data2 = tokenizer2.texts_to_sequences(sentences)
+
+    data = pad_sequences(data, padding='post', maxlen= maxlen)
+    data2 = pad_sequences(data2, padding='post', maxlen= maxlen)
+    
+    grav_pred = model_grav.predict(data)
+    ses_pred = model_ses.predict(data2)
+
+    grav_val = np.round(grav_pred)
+    ses_val= np.round(ses_pred)
+    print(grav_val)
+
+    cm(grav_true, grav_val)
+    cm(ses_true, ses_pred)
+
+
+
 if __name__=="__main__":
-    train_neural_basic_preembedding(True, descarga=True, augment=False)
+    train_neural_basic_preembedding(True, descarga=False, augment=False)
+    #metricas(300)
