@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import tensorflow as tf
+import os, os.path
 
 import pickle
 
@@ -17,8 +18,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import confusion_matrix, precision_score, recall_score
 from mlxtend.plotting import plot_confusion_matrix
 
 def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
@@ -37,8 +37,9 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
-    model.add(layers.Conv1D(200, 40, activation='relu'))
+    #model.add(layers.Conv1D(200, 40, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
+    model.add(layers.Dense(60, activation='tanh'))
     model.add(layers.Dense(25, activation='relu'))
     model.add(layers.Dense(4, activation='softmax'))
 
@@ -140,11 +141,10 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_acc', mode='max')
 
     history = model.fit(X_grav_train, grav_train,
-                    epochs=2000,
+                    epochs=500,
                     verbose=True,
                     validation_data=(X_grav_test, grav_test),
-                        batch_size=128,
-                        callbacks=[es])
+                        batch_size=128)
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
@@ -169,22 +169,29 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
         plot_history(history2)
         plt.show()
 
-    model.save('../models/neural_v3_grav.h5')
-    model2.save('../models/neural_v3_ses.h5')
+    DIR = '../models'
+    version = len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
 
-    with open('tokenizer.pickle','wb') as handle1:
+    model.save(f'../models/neural_v3_grav_r{version}.h5')
+    model2.save(f'../models/neural_v3_ses_r{version}.h5')
+
+    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','wb') as handle1:
         pickle.dump(tokenizer, handle1, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open('tokenizer2.pickle','wb') as handle:
+    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','wb') as handle:
         pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-def modelo(pers_test):
+def modelo(pers_test, version):
     model_grav = load_model('../models/neural_v3_grav.h5')
     model_ses = load_model('../models/neural_v3_ses.h5')
 
-    maxlen = 250
+    maxlen = 300
 
-    tokenizer, tokenizer2 = data_preset(train = False)
+    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','rb') as handle1:
+        tokenizer = pickle.load(handle1)
+
+    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','rb') as handle:
+        tokenizer2 = pickle.load(handle)
 
     test1 = tokenizer.texts_to_sequences(np.array([pers_test]))
     test2 = tokenizer2.texts_to_sequences(np.array([pers_test]))
@@ -194,19 +201,22 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 def cm(y_true,y_pred):
-  return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds')
+    #print(confusion_matrix(y_true, y_pred))
+    return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds', show_normed=False)
 
-def metricas(maxlen):
-    model_grav = load_model('../models/neural_v3_grav.h5')
-    model_ses = load_model('../models/neural_v3_ses.h5')
+def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])):
+    
+    model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
+    model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
 
-    with open('tokenizer.pickle','rb') as handle1:
+    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','rb') as handle1:
         tokenizer = pickle.load(handle1)
 
-    with open('tokenizer2.pickle','rb') as handle:
+    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','rb') as handle:
         tokenizer2 = pickle.load(handle)
     
     sentences, grav_true, ses_true = sets(split=False)
+    ses_true+=1
 
     data = tokenizer.texts_to_sequences(sentences)
     data2 = tokenizer2.texts_to_sequences(sentences)
@@ -220,13 +230,13 @@ def metricas(maxlen):
     grav_val = np.round(grav_pred).argmax(axis=1)
     ses_val= np.round(ses_pred).argmax(axis=1)
 
-    print(grav_true, grav_val)
-    
-    cm(grav_true, grav_val)
     cm(ses_true, ses_val)
+    cm(grav_true, grav_val)
+
+    plt.show()
 
 
 
 if __name__=="__main__":
-#    train_neural_basic_preembedding(False, descarga=False, augment=False)
-    metricas(300)
+    #train_neural_basic_preembedding(True, descarga=False, augment=False)
+    metricas(300,version=0)
