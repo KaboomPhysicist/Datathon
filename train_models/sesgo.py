@@ -47,13 +47,11 @@ y_train = df_concat['SesgoMode'].values
 X_test = df3['Item (Texto)'].values
 y_test = df3['SesgoMode'].values
 
-print(y_test)
+for i in range(len(y_test)):
+	y_test[i] = int(y_test[i]) + 1
 
-#for i in range(len(y_test)):
-#	y_test[i] = int(y_test[i]) + 1
-
-#for i in range(len(y_train)):
-#	y_train[i] = int(y_train[i]) + 1
+for i in range(len(y_train)):
+	y_train[i] = int(y_train[i]) + 1
 
 t = Tokenizer()
 t.fit_on_texts(X_train)
@@ -80,8 +78,6 @@ padded_x_test = pad_sequences(sequences2, padding='pre', maxlen=max(news_num1, n
 
 labels_train = to_categorical(np.asarray(y_train))
 labels_test = to_categorical(np.asarray(y_test))
-
-print(labels_test)
 
 X_train, X_test, y_train, y_test = padded_x_train, padded_x_test, labels_train, labels_test
 
@@ -149,31 +145,32 @@ def create_model(neurons=20, momentum=0.9):
 
 model = KerasClassifier(build_fn=create_model,epochs=500,batch_size=256, callbacks=[es])
 
-#momentum = [0.1, 0.3, 0.5, 0.7, 0.9, 1]
-#param_grid = dict(momentum = momentum )
+neurons = [20, 30, 50, 60, 90, 40]
+momentum = [0.2, 0.5, 0.7, 0.9]
+param_grid = dict(neurons = neurons, momentum = momentum )
 
-#grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
-#grid_result = grid.fit(X_train, y_train,validation_data=(X_test, y_test))
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1, verbose=3)
+grid_result = grid.fit(X_train, y_train,validation_data=(X_val, y_val))
 
 
-#print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-#means = grid_result.cv_results_['mean_test_score']
-#stds = grid_result.cv_results_['std_test_score']
-#params = grid_result.cv_results_['params']
-#for mean, stdev, param in zip(means, stds, params):
-#    print("%f (%f) with: %r" % (mean, stdev, param))
+print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+means = grid_result.cv_results_['mean_test_score']
+stds = grid_result.cv_results_['std_test_score']
+params = grid_result.cv_results_['params']
+for mean, stdev, param in zip(means, stds, params):
+    print("%f (%f) with: %r" % (mean, stdev, param))
 
 plt.style.use('ggplot')
 
 keras.backend.clear_session()
-mod = create_model(neurons=60, momentum=0.9)
+mod = create_model(neurons=grid_result.best_params_['neurons'], momentum=grid_result.best_params_['momentum'])
 
 es=EarlyStopping(monitor='val_loss',patience=30, restore_best_weights=True)
 mcp_save = ModelCheckpoint('./checkpointr',save_best_only=True, monitor='val_accuracy', mode='max')
 
 history = mod.fit(X_train, y_train,
                             batch_size=256,
-                            epochs=700,
+                            epochs=500,
                             validation_data=(X_val, y_val),
                             callbacks=[es,mcp_save])
 loss, accuracy = mod.evaluate(X_train, y_train, verbose=False)

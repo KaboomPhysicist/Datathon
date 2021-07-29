@@ -31,16 +31,16 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
-    model.add(layers.Conv1D(300, 50, activation='relu'))
+    model.add(layers.Conv1D(200, 40, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(25, activation='sigmoid'))
+    model.add(layers.Dense(25, activation='relu'))
     model.add(layers.Dense(4, activation='softmax'))
 
     lr_schedule = optimizers.schedules.ExponentialDecay(initial_learning_rate=1e-2,
                                                         decay_steps=10000,
                                                         decay_rate=0.9)
 
-    opt = optimizers.Adam(learning_rate=0.01, clipnorm = 1, clipvalue = 0.5)
+    opt = optimizers.Adam(learning_rate=0.001, clipnorm = 1, clipvalue = 0.5)
 
     model.compile(optimizer=opt,
                     loss='sparse_categorical_crossentropy',
@@ -65,6 +65,7 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
 
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(15,activation='relu'))
+    model.add(layers.Dropout(0.3))
     model.add(layers.Dense(10, activation='relu'))
     model.add(layers.Dense(3, activation='softmax'))
     model.compile(optimizer='adam',
@@ -134,10 +135,11 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     mcp_save = ModelCheckpoint('./checkpoint',save_best_only=True, monitor='val_acc', mode='max')
 
     history = model.fit(X_grav_train, grav_train,
-                    epochs=500,
-                    verbose=False,
+                    epochs=2000,
+                    verbose=True,
                     validation_data=(X_grav_test, grav_test),
-                    batch_size=128)
+                        batch_size=128,
+                        callbacks=[es])
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
@@ -181,4 +183,4 @@ def modelo(pers_test):
     print(model_grav.predict(test1),model_ses.predict(test2))
 
 if __name__=="__main__":
-    train_neural_basic_preembedding(True, descarga=True, augment=False)
+    train_neural_basic_preembedding(True, descarga=False, augment=False)
