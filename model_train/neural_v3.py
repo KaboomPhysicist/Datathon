@@ -185,8 +185,8 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
         pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def modelo(pers_test, version):
-    model_grav = load_model('../models/neural_v3_grav.h5')
-    model_ses = load_model('../models/neural_v3_ses.h5')
+    model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
+    model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
 
     maxlen = 300
 
@@ -201,7 +201,7 @@ def modelo(pers_test, version):
     test1 = pad_sequences(test1, padding='post', maxlen= maxlen)
     test2 = pad_sequences(test2, padding='post', maxlen= maxlen)
 
-    print(model_grav.predict(test1),model_ses.predict(test2))
+    print(f"{pers_test}\nGravedad: {model_grav.predict(test1)}\nSesgo: {model_ses.predict(test2)}")
 
 def cm(y_true,y_pred):
     #print(confusion_matrix(y_true, y_pred))
@@ -246,6 +246,6 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 
 
 if __name__=="__main__":
-    for i in range(12):
-        train_neural_basic_preembedding(True, descarga=False, augment=False)
-        metricas(300)
+    #train_neural_basic_preembedding(True, descarga=False, augment=False)
+    #metricas(300)
+    modelo('Bogotá vive este martes 4 de mayo otra noche de protestas. Se han presentado bloqueos y enfrentamientos con la fuerza pública. El servicio de Transmilenio fue suspendido. En medio de los disturbios, según Luis Ernesto Gómez, secretario de Gobierno, unos 15 CAI fueron atacados.',81)
