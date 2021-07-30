@@ -246,6 +246,7 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 
 
 if __name__=="__main__":
-    for i in range(10):
-        train_neural_basic_preembedding(True, descarga=False, augment=False)
-        metricas(300)
+#    for i in range(10):
+#        train_neural_basic_preembedding(True, descarga=False, augment=False)
+    for i in range(4,18):
+        metricas(300,i)
