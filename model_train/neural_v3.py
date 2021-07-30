@@ -37,7 +37,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
-    #model.add(layers.Conv1D(200, 40, activation='relu'))
+    model.add(layers.Conv1D(200, 80, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(60,kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1', activation='tanh'))
     model.add(layers.Dense(25, activation='relu'))
@@ -150,7 +150,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
                     epochs=500,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                    batch_size=128)
+                          batch_size=128)
         
 
     loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
@@ -213,7 +213,7 @@ def cm(y_true,y_pred):
     ax.text(-0.5,-0.5,str(precision_score(y_true,y_pred, average='macro')))
 
 
-def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2)):
+def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2)-1):
     
     model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
     model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
@@ -246,7 +246,6 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 
 
 if __name__=="__main__":
-#    for i in range(10):
-#        train_neural_basic_preembedding(True, descarga=False, augment=False)
-    for i in range(4,18):
-        metricas(300,i)
+    for i in range(7):
+        train_neural_basic_preembedding(True, descarga=False, augment=False)
+        metricas(300)
