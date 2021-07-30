@@ -169,9 +169,9 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
 
     if graph:
         plot_history(history)
-        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}')
+        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}.png')
         plot_history(history2)
-        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}')
+        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}.png')
 
     
 
@@ -240,9 +240,9 @@ def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.
     ses_val= np.round(ses_pred).argmax(axis=1)
 
     cm(ses_true, ses_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}')
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}.png')
     cm(grav_true, grav_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}')
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}.png')
 
 
 if __name__=="__main__":
