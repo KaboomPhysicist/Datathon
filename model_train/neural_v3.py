@@ -39,7 +39,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
 
     #model.add(layers.Conv1D(200, 40, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
-    model.add(layers.Dense(60, activation='tanh'))
+    model.add(layers.Dense(60,kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1', activation='tanh'))
     model.add(layers.Dense(25, activation='relu'))
     model.add(layers.Dense(4, activation='softmax'))
 
@@ -142,13 +142,13 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
 
     history = model.fit(X_grav_train, grav_train,
                     epochs=500,
-                    verbose=True,
+                    verbose=False,
                     validation_data=(X_grav_test, grav_test),
                         batch_size=128)
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
-                    verbose=True,
+                    verbose=False,
                     validation_data=(X_ses_test, ses_test),
                     batch_size=128)
         
@@ -165,13 +165,13 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     print("--------------------------------------------------------------------")
 
     DIR = '../models'
-    version = len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])/2
+    version = int(len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])/2)
 
     if graph:
         plot_history(history)
-        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}.png')
+        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}')
         plot_history(history2)
-        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}.png')
+        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}')
 
     
 
@@ -213,7 +213,7 @@ def cm(y_true,y_pred):
     ax.text(-0.5,-0.5,str(precision_score(y_true,y_pred, average='macro')))
 
 
-def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2):
+def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2)):
     
     model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
     model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
@@ -240,11 +240,12 @@ def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.
     ses_val= np.round(ses_pred).argmax(axis=1)
 
     cm(ses_true, ses_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}.png')
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}')
     cm(grav_true, grav_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}.png')
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}')
 
 
 if __name__=="__main__":
-    train_neural_basic_preembedding(True, descarga=False, augment=False)
-    metricas(300)
+    for i in range(10):
+        train_neural_basic_preembedding(True, descarga=False, augment=False)
+        metricas(300)
