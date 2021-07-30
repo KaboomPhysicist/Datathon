@@ -37,7 +37,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
-#    model.add(layers.Conv1D(200, 80, activation='relu'))
+    model.add(layers.Conv1D(200, 80, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(60,kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1', activation='tanh'))
     model.add(layers.Dense(25, activation='relu'))
