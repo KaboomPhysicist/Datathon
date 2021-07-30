@@ -37,7 +37,7 @@ def create_model(tokenizer, embedding_dim, embedding_path, maxlen):
         trainable = True
     ))
 
-    model.add(layers.Conv1D(200, 80, activation='relu'))
+#    model.add(layers.Conv1D(200, 80, activation='relu'))
     model.add(layers.GlobalMaxPooling1D())
     model.add(layers.Dense(60,kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1', activation='tanh'))
     model.add(layers.Dense(25, activation='relu'))
@@ -246,6 +246,6 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 
 
 if __name__=="__main__":
-    for i in range(32,39):
-        #train_neural_basic_preembedding(True, descarga=False, augment=False)
-        metricas(300,i)
+    for i in range(12):
+        train_neural_basic_preembedding(True, descarga=False, augment=False)
+        metricas(300)
