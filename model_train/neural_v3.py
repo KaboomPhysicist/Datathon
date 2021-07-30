@@ -148,7 +148,7 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
-                    verbose=False,
+                    verbose=True,
                     validation_data=(X_ses_test, ses_test),
                     batch_size=128)
         
@@ -164,13 +164,16 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     print("Precisión de prueba (Sesgo):  {:.4f}".format(accuracy))
     print("--------------------------------------------------------------------")
 
+    DIR = '../models'
+    version = len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])/2
+
     if graph:
         plot_history(history)
+        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}')
         plot_history(history2)
-        plt.show()
+        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}')
 
-    DIR = '../models'
-    version = len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+    
 
     model.save(f'../models/neural_v3_grav_r{version}.h5')
     model2.save(f'../models/neural_v3_ses_r{version}.h5')
@@ -202,9 +205,15 @@ def modelo(pers_test, version):
 
 def cm(y_true,y_pred):
     #print(confusion_matrix(y_true, y_pred))
-    return plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds', show_normed=False)
+    a = confusion_matrix(y_true,y_pred)
+    sum_first_diagonal = sum(a[i][i] for i in range(len(a)))
 
-def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])):
+    fig, ax = plot_confusion_matrix(confusion_matrix(y_true,y_pred), cmap='Reds')
+    ax.set(title=(str(np.sum(a) - sum_first_diagonal)))
+    ax.text(-0.5,-0.5,str(precision_score(y_true,y_pred, average='macro')))
+
+
+def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2):
     
     model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
     model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
@@ -231,12 +240,11 @@ def metricas(maxlen,version=len([name for name in os.listdir('../models') if os.
     ses_val= np.round(ses_pred).argmax(axis=1)
 
     cm(ses_true, ses_val)
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}')
     cm(grav_true, grav_val)
-
-    plt.show()
-
+    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}')
 
 
 if __name__=="__main__":
-    #train_neural_basic_preembedding(True, descarga=False, augment=False)
-    metricas(300,version=0)
+    train_neural_basic_preembedding(True, descarga=False, augment=False)
+    metricas(300)
