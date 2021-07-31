@@ -188,7 +188,7 @@ loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
 if accuracy >= 0.7:
- mod.save('prueba_sesgo.h5')
+ mod.save('../models/testing/prueba_sesgo.h5')
 y_true = np.concatenate((y_train, y_test), axis=0)
 X_true = np.concatenate((X_train, X_test), axis=0)
 

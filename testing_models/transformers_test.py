@@ -1,6 +1,8 @@
 from matplotlib import pyplot as plt
 
-from extract_split_data import create_embedding_matrix, data_preset, pad, plot_history
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_train.extract_split_data import create_embedding_matrix, data_preset, pad, plot_history
 
 import tensorflow as tf
 from tensorflow import keras

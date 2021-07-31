@@ -11,7 +11,7 @@ from extract_split_data import data_preset, pad
 #Función para optimizar los hiperparámetros del modelo de red neuronal de neural_v3.py
 def hyperoptimization(epochs, param_grid, type = 'random'):
     #Archivo donde se guardaran los resultados de parámetros óptimos
-    output_file = 'performance/output_neural_v3.txt'
+    output_file = '../performance/output_neural_v3.txt'
 
     maxlen = 250
 

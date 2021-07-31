@@ -6,8 +6,9 @@ from tensorflow.keras.backend import clear_session
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-from extract_split_data import vectorized_set, plot_history
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_train.extract_split_data import plot_history, vectorized_set
 
 #Modelos de redes neuronales basados en CountVectorizer con sesgo y gravedad separados
 

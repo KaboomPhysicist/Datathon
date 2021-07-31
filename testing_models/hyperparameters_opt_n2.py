@@ -4,7 +4,9 @@ from sklearn.model_selection import GridSearchCV
 
 import neural_v2 as n2
 
-from extract_split_data import data_preset, pad
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_train.extract_split_data import data_preset, pad
 
 def hyperoptimization(epochs,param_grid,type='random'):
     output_file = 'performance/output_neural_v2.txt'

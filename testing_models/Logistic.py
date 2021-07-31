@@ -1,5 +1,6 @@
-from extract_split_data import sets
-from extract_split_data import vectorized_set
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_train.extract_split_data import vectorized_set
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression

@@ -81,46 +81,6 @@ def create_model2(tokenizer, embedding_dim, embedding_path, maxlen):
             )
     return model
 
-def create_model3(tokenizer, embedding_dim, embedding_path, maxlen, neurons=20, momentum=0.9):
-    vocab_size = len(tokenizer.word_index) + 1
-    embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
-    embedding_layer = layers.Embedding(input_dim=vocab_size, output_dim=embedding_dim, weights=[embedding_matrix],input_length = maxlen, trainable=True)
-    
-    """vocab_size = len(tokenizer.word_index) + 1
-
-    embedding_matrix = create_embedding_matrix(embedding_path,tokenizer.word_index, embedding_dim)
-
-    mod = Sequential()
-    mod.add(layers.Embedding(
-        input_dim= vocab_size,
-        output_dim= embedding_dim,
-        weights = [embedding_matrix],
-        input_length= maxlen,
-        trainable = True
-    ))"""
-
-    mod = Sequential()
-    mod.add(embedding_layer)
-    mod.add(layers.Conv1D(128, 5, activation='relu'))
-    mod.add(layers.GlobalMaxPool1D())
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dropout(0.2))
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dropout(0.2))
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dropout(0.2))
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dropout(0.2))
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dropout(0.2))
-    mod.add(layers.Dense(neurons, activation='relu', kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l1(0.005),bias_regularizer='l1'))
-    mod.add(layers.Dense(4, activation='softmax'))
-    opt = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=momentum, nesterov=True, clipnorm = 1, clipvalue = 0.5)
-    mod.compile(optimizer=opt,
-                loss='sparse_categorical_crossentropy',
-                metrics=['acc'])
-    return mod
-
 def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings/embeddings-l-model.vec', descarga=False, augment = False):
     maxlen = 300
 
@@ -144,13 +104,13 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
                     epochs=500,
                     verbose=False,
                     validation_data=(X_grav_test, grav_test),
-                        batch_size=128)
+                    batch_size=128)
 
     history2 = model2.fit(X_ses_train, ses_train,
                     epochs=500,
                     verbose=False,
                     validation_data=(X_ses_test, ses_test),
-                          batch_size=128)
+                    batch_size=128)
         
 
     loss, accuracy = model.evaluate(X_grav_train, grav_train, verbose=False)
@@ -164,36 +124,36 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     print("Precisión de prueba (Sesgo):  {:.4f}".format(accuracy))
     print("--------------------------------------------------------------------")
 
-    DIR = '../models'
-    version = int(len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])/2)
+    DIR = '../models/Modelos gravedad/'
+    version = int(len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))]))
 
     if graph:
         plot_history(history)
-        plt.savefig(f'performance/accuracy/accuracy_grav_v{version}')
+        plt.savefig(f'../performance/accuracy/Gravedad/accuracy_grav_v{version}')
         plot_history(history2)
-        plt.savefig(f'performance/accuracy/accuracy_ses_v{version}')
+        plt.savefig(f'../performance/accuracy/Sesgo/accuracy_ses_v{version}')
 
     
 
-    model.save(f'../models/neural_v3_grav_r{version}.h5')
-    model2.save(f'../models/neural_v3_ses_r{version}.h5')
+    model.save(f'../models/Modelos gravedad/neural_v3_grav_r{version}.h5')
+    model2.save(f'../models/Modelos sesgo/neural_v3_ses_r{version}.h5')
 
-    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','wb') as handle1:
+    with open(f'../models/tokenizers/Gravedad/tokenizer_r{version}.pickle','wb') as handle1:
         pickle.dump(tokenizer, handle1, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','wb') as handle:
+    with open(f'../models/tokenizers/Sesgo/tokenizer2_r{version}.pickle','wb') as handle:
         pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def modelo(pers_test, version):
-    model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
-    model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
+    model_grav = load_model(f'../models/Modelos gravedad/neural_v3_grav_r{version}.h5')
+    model_ses = load_model(f'../models/Modelos sesgo/neural_v3_ses_r{version}.h5')
 
     maxlen = 300
 
-    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','rb') as handle1:
+    with open(f'../models/tokenizers/Gravedad/tokenizer_r{version}.pickle','rb') as handle1:
         tokenizer = pickle.load(handle1)
 
-    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','rb') as handle:
+    with open(f'../models/tokenizers/Sesgo/tokenizer2_r{version}.pickle','rb') as handle:
         tokenizer2 = pickle.load(handle)
 
     test1 = tokenizer.texts_to_sequences(np.array([pers_test]))
@@ -213,15 +173,15 @@ def cm(y_true,y_pred):
     ax.text(-0.5,-0.5,str(precision_score(y_true,y_pred, average='macro')))
 
 
-def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))])/2)-1):
+def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if os.path.isfile(os.path.join('../models', name))]))-1):
     
-    model_grav = load_model(f'../models/neural_v3_grav_r{version}.h5')
-    model_ses = load_model(f'../models/neural_v3_ses_r{version}.h5')
+    model_grav = load_model(f'../models/Modelos gravedad/neural_v3_grav_r{version}.h5')
+    model_ses = load_model(f'../models/Modelos sesgo/neural_v3_ses_r{version}.h5')
 
-    with open(f'../models/tokenizers/tokenizer_r{version}.pickle','rb') as handle1:
+    with open(f'../models/tokenizers/Gravedad/tokenizer_r{version}.pickle','rb') as handle1:
         tokenizer = pickle.load(handle1)
 
-    with open(f'../models/tokenizers/tokenizer2_r{version}.pickle','rb') as handle:
+    with open(f'../models/tokenizers/Sesgo/tokenizer2_r{version}.pickle','rb') as handle:
         tokenizer2 = pickle.load(handle)
     
     sentences, grav_true, ses_true = sets(split=False)
@@ -240,9 +200,9 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
     ses_val= np.round(ses_pred).argmax(axis=1)
 
     cm(ses_true, ses_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_sesgo_v{version}')
+    plt.savefig(f'../performance/confussion_matrix/Sesgo/Confussion_matrix_sesgo_v{version}')
     cm(grav_true, grav_val)
-    plt.savefig(f'performance/confussion_matrix/Confussion_matrix_gravedad_v{version}')
+    plt.savefig(f'../performance/confussion_matrix/Gravedad/Confussion_matrix_gravedad_v{version}')
 
 
 if __name__=="__main__":

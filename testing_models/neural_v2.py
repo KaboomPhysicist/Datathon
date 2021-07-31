@@ -1,4 +1,6 @@
-from extract_split_data import plot_history, data_preset, pad
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_train.extract_split_data import data_preset, pad, plot_history
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
@@ -96,13 +98,13 @@ def train_neural_basic_embedding(graph=False):
         plot_history(history2)
         plt.show()
 
-    model.save('../models/neural_v2_grav.h5')
-    model2.save('../models/neural_v2_ses.h5')
+    model.save('../models/testing/neural_v2_grav.h5')
+    model2.save('../models/testing/neural_v2_ses.h5')
 
 
 def modelo(pers_test):
-    model_grav = load_model('../models/neural_v2_grav.h5')
-    model_ses = load_model('../models/neural_v2_ses.h5')
+    model_grav = load_model('../models/testing/neural_v2_grav.h5')
+    model_ses = load_model('../models/testing/neural_v2_ses.h5')
 
     maxlen = 250
 

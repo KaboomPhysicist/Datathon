@@ -186,7 +186,7 @@ print("Training Accuracy: {:.4f}".format(accuracy))
 loss, accuracy = mod.evaluate(X_test, y_test, verbose=False)
 print("Testing Accuracy:  {:.4f}".format(accuracy))
 
-mod.save('prueba_gravedad.h5')
+mod.save('..models/testing/prueba_gravedad.h5')
 #y_true = np.concatenate((y_train, y_test), axis=0)
 #X_true = np.concatenate((X_train, X_test), axis=0)
 
