@@ -246,5 +246,6 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 
 
 if __name__=="__main__":
-    for i in range(10):
-        train_neural_basic_preembedding(True, embedding_path='../embeddings/fasttext-sbwc.vec', descarga=False, augment=False)
+    #train_neural_basic_preembedding(True, embedding_path='../embeddings/fasttext-sbwc.vec', descarga=False, augment=False)
+    #metricas(300,i)
+    modelo("Ingrese la frase a ser clasificada: Las calles y muros de varias ciudades colombianas son por estos días los lienzos de las manifestaciones que se vienen dando en el paro nacional que ya cumple 27 jornadas. Los artistas que intervienen estos espacios son conscientes de que los mensajes que plasman, muy posiblemente, serán borrados en poco tiempo. Algunos académicos, sin embargo, resaltan en el arte de calle el poder de generar diálogo y su potencial como acción política.",23)
