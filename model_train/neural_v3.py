@@ -144,7 +144,10 @@ def train_neural_basic_preembedding(graph=False, embedding_path = '../embeddings
     with open(f'../models/tokenizers/Sesgo/tokenizer2_r{version}.pickle','wb') as handle:
         pickle.dump(tokenizer2, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-def modelo(pers_test, version):
+def modelo(version):
+
+    pers_test = str(input("Ingrese la frase a evaluar: "))
+
     model_grav = load_model(f'../models/Modelos gravedad/neural_v3_grav_r{version}.h5')
     model_ses = load_model(f'../models/Modelos sesgo/neural_v3_ses_r{version}.h5')
 
@@ -208,4 +211,4 @@ def metricas(maxlen,version=int(len([name for name in os.listdir('../models') if
 if __name__=="__main__":
     #train_neural_basic_preembedding(True, embedding_path='../embeddings/fasttext-sbwc.vec', descarga=False, augment=False)
     #metricas(300,i)
-    modelo("Ingrese la frase a ser clasificada: Las calles y muros de varias ciudades colombianas son por estos días los lienzos de las manifestaciones que se vienen dando en el paro nacional que ya cumple 27 jornadas. Los artistas que intervienen estos espacios son conscientes de que los mensajes que plasman, muy posiblemente, serán borrados en poco tiempo. Algunos académicos, sin embargo, resaltan en el arte de calle el poder de generar diálogo y su potencial como acción política.",23)
+    modelo(23)
