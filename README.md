@@ -28,7 +28,7 @@ The data/ folder contains the main dataset and some variations of this one. The 
 
 The models/ folder contains all the generated models from neural_v3.py and Augmented Em-pre_DNN.ipynb. There are over 100 models and they can be classified in groups according to the parameters set in the script. The information about these parameters has not been saved, but you can check the performance of the model by the confussion matrix and the accuracy and loss graphs in the performance/ folder.
 
-The drive/ folder contains a file for autodownloading the dataset. This was useful when the dataset was changing, but the dataset doesn't change anymore, so you can ignore this file. However, if you want to use this file for downloading another dataset, you must change the id in the file and provide a client_secrets.json in the same folder (for more information about client_secrets.json you can check: https://cloud.google.com/bigquery/docs/authentication/end-user-installed)
+The drive/ folder contains a file for autodownloading the dataset. This was useful when the dataset was changing, but the dataset doesn't change anymore, so you can ignore this file. However, if you want to use this file for downloading another dataset, you must change the id in the file and provide a client_secrets.json in the same folder (for more information about client_secrets.json you can check: https://developers.google.com/identity/protocols/oauth2
 
 
 ### Important advice
