@@ -34,3 +34,38 @@ The drive/ folder contains a file for autodownloading the dataset. This was usef
 ### Important advice
 If you want to use any of the main files for training with any dataset you must make a new directory in the main folder named embeddings/ and you must place at least one spanish embedding (and modify the path in the scripts). We have used the embeddings from this repository: https://github.com/dccuchile/spanish-word-embeddings
 
+
+## Español
+
+Este proyecto es la solución propuesta a una pequeña competencia interna llamada Datathon. El principal objetivo era crear un modelo de Deep Learning para clasificación de texto, más específicamente, para dar valores de sesgo (político) y gravedad a párrafos noticiosos.
+La competencia nace en medio del Paro Nacional de Colombia en 2021, por lo tanto las noticias a trabajar están enfocadas en los hechos ocurridos en las manifestaciones y en las declaraciones de figuras públicas en los medios.
+
+El conjunto de datos original usado está en el documento clasificacion.csv en la carpeta data/. Este conjunto de datos fue construido con la ayuda de cada uno de los participantes de la competencia, donde cada grupo introdujo 50 párrafos de noticias y los calificó, además de calificar otros 50 de otros equipos. Para seleccionar el valor de gravedad y sesgo se acordó escoger la moda entre los datos dados.
+
+Hay 3 posibles valores para sesgo:
+* -1 para sesgo negativo. En contra del gobierno.
+* 0 para imparcialidad.
+* 1 para sesgo positivo. A favor del gobierno.
+
+Hay 4 posibles valores para gravedad:
+* 0 para Sin Gravedad
+* 1 para Levemente Grave
+* 2 para Grave
+* 3 para Muy Grave
+
+Si solo desea evaluar una noticia con el modelo final entrenado que hemos escogido para la competencia, puede descargar la carpeta final_model/, la cual contiene un Notebook de Jupyter con instrucciones para calcular la matriz de confusión dado un conjunto de datos, y una función para hacer las predicciones con tan solo ingresar el párrafo noticioso. Alternativamente, puede descargar el archivo neural_v3.py de la carpeta model_train/, el cual solicitará directamente la noticia a evaluar. Para usar este último es necesario descargar la carpeta models/. El archivo contiene otras opciones y funciones, pero estas deben de ser cambiadas o invocadas dentro del propio archivo para poder ser usadas.
+
+Los principales archivos de este repositorio se encuentran en model_train. Estos son neural_v3.py y Augmented Em-pre_DNN.ipynb. Los archivos gravedad.py y sesgo.py son versiones en forma de script del archivo Augmented Em-pre_DNN.ipynb. Ambos archivos son los usados para el entrenamiento de las redes neuronales. Los modelos contenidos en models/ corresponden a los generados por neural_v3.py a lo largo de las pruebas.
+
+El archivo neural_v3.py contiene un modelo para gravedad y uno para sesgo. Adicionalmente, contiene funciones para generar gráficas del rendimiento y de la matriz de confusión, y también hay funciones para la implementación del modelo como se mencionó previamente.
+Todos los modelos (tanto de neural_v3.py como de Augmented Em-pre_DNN.ipynb) usan tensorflow y keras para la red neural, e incluyen una capa de embedding para usar un embedding preentrenado.
+
+The data/ folder contains the main dataset and some variations of this one. The variations has been done by data augmentation, using libraries like nlpaug or BackTranslation. The scripts in data_augmentation/ folder generated these datasets, but they were not used, since the resulting data were poor and the models trained with these had a worse performance.
+
+The models/ folder contains all the generated models from neural_v3.py and Augmented Em-pre_DNN.ipynb. There are over 100 models and they can be classified in groups according to the parameters set in the script. The information about these parameters has not been saved, but you can check the performance of the model by the confussion matrix and the accuracy and loss graphs in the performance/ folder.
+
+The drive/ folder contains a file for autodownloading the dataset. This was useful when the dataset was changing, but the dataset doesn't change anymore, so you can ignore this file. However, if you want to use this file for downloading another dataset, you must change the id in the file and provide a client_secrets.json in the same folder (for more information about client_secrets.json you can check: https://developers.google.com/identity/protocols/oauth2
+
+
+### Anuncio importante
+Si desea usar cualquiera de los archivos principales para entrenar con cualquier conjunto de datos, debe crear una nueva carpeta en el directorio central del repositorio llamada embeddings, y debe descargar en esta carpeta al menos un embedding en español (y modificar la ruta en las funciones correspondientes, usualmente referido como embedding_path). Para este proyecto hemos usado los embeddings que se presentan en este repositorio: https://github.com/dccuchile/spanish-word-embeddings
